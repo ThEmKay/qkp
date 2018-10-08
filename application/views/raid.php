@@ -46,16 +46,68 @@
         </style>   
              
         <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-            <form class="form-inline" method="POST" action="<?php echo current_url(); ?>">
+            <form class="form-inline" method="POST" action="<?php echo current_url(); ?>" style="margin:0">
                 <span style="color:#fff"><b>Raid-ID:</b> {raidid}&nbsp;-&nbsp;<b>Konto:</b>&nbsp;</span>
                 <select class="custom-select mr-sm-5" name="selKonto" onchange="submit();">
                     {konten}
                     <option {checked} value="{kurz}">{name}</option>
                     {/konten}
                 </select>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#charakterModal">
+                  <b>+</b> Charakter hinzuf&uuml;gen
+                </button>
             </form>
         </nav>
-        
+        <div class="modal fade" id="charakterModal" tabindex="-1" role="dialog" aria-labelledby="charakterModal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Charakter hinzuf&uuml;gen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="<?php echo current_url(); ?>" method="POST">
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input class="form-control" type="text" placeholder="Name" name="txtCharakterNeu" />
+                  </div>
+                  <div class="form-group">
+                    <label>Klasse</label>
+                    <select class="form-control" name="selCharakterKlasse">
+                      <option value="druide">Druide</option>
+                      <option value="hexenmeister">Hexenmeister</option>
+                      <option value="jaeger">J&auml;ger</option>
+                      <option value="krieger">Krieger</option>
+                      <option value="magier">Magier</option>
+                      <option value="paladin">Paladin</option>
+                      <option value="priester">Priester</option>
+                      <option value="schurke">Schurke</option>
+                    </select> 
+                  </div>
+                  <div class="form-group">
+                    <label>Startbonus</label>
+                    <input class="form-control" type="text" name="intBonus" size="2" value="0" />
+                  </div>
+                  <div class="form-group">                  
+                    <label>Twink?</label>
+                    <select class="form-control" name="selTwink">
+                      <option value="no">Nein</option>
+                      {alle}
+                      <option value="{name}">
+                        {name}
+                      </option>
+                      {/alle}
+                    </select>
+                  </div>
+              </div>
+              <input type="submit" name="sbmCharakterNeu" class="btn btn-success" value="Speichern" />
+              <div>&nbsp;</div>
+              </form>
+            </div>
+          </div>
+        </div>
 
         
         <div class="container">
@@ -74,8 +126,9 @@
                               {spieler}
                               <div class="form-check">
                                 <input class="form-check-input" name="teilnehmer[]" type="checkbox" {checked} value="{name}" id="{name}">
-                                <label class="form-check-label" for="{name}">
+                                <label class="form-check-label" for="{name}" style="margin-bottom:3px">
                                   {name}
+                                  {alt}<div><img style="width:15px" src="<?php echo base_url(); ?>img/class_{klasse}.jpg" />{name}</div>{/alt}                                 
                                 </label>
                                 &nbsp;
                               </div>
@@ -181,14 +234,31 @@
                     <div>
                       Voraussichtliche Bonuspunkte nach dem Raid:
                       {sum}
+                        <form action="<?php echo current_url(); ?>" method="POST">
+                          <table>
+                          <tr>
+                            <th>
+                                Spieler
+                            </th>
+                            <th>
+                                Alt
+                            </th>
+                            <th>
+                                Neu
+                            </th>
+                          </tr>
                           {punktestand}
-                              {spieler} {bonus_alt} {bonus_neu}<br />
+                          <tr style="font-weight:{highlight}">
+                              <td>
+                                {spieler}
+                                <input type="hidden" name="hidPunkteSchreiben[{spieler}]" value="{bonus_neu}">
+                              </td><td>{bonus_alt}</td><td>{bonus_neu}</td>
+                          </tr>
                           {/punktestand}
-                      {/sum}
-                      
-                      <form action="<?php echo current_url(); ?>" method="POST">
+                          </table>
                         <input type="submit" name="sbmEnd" class="btn btn-warning" value="Raid beenden und Punkte schreiben" />
                       </form>
+                      {/sum}
                     </div>
                   </div>
                 </div>

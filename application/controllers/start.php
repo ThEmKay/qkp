@@ -58,6 +58,7 @@ class Start extends CI_Controller {
   private function setRaidId($i){
       echo $i;
       $this->session->set_userdata('raidid', $i);                               // Session Raid-Id vergeben
+      $this->session->set_userdata('konto', 'ZG');
       redirect('raid');                                               // Weiterleitung zur Übersichtsseite 
   }
   

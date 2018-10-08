@@ -10,8 +10,24 @@
                 redirect('start');
             }
             
-            $this->session->set_userdata('konto', 'ZG');
-          
+            // Konten auslesen
+            $query = $this->db->get('konten');
+            $konten = $query->result_array();
+            if(!empty($konten)){
+              foreach($konten as &$konto){
+                  if($konto['kurz'] == $this->session->userdata('konto')){
+                    $konto['checked'] = "selected";
+                  }else{
+                    $konto['checked'] = "";
+                  }
+              }
+            }
+            $vars['konten'] = $konten;            
+            
+            
+            
+            
+                      
             /// POST
             
             $acc_active = 0;
@@ -78,10 +94,49 @@
                 }
                 
                 $acc_active = 1;
-                
+            
+            // Raid-Session beenden    
             }elseif($this->input->post('sbmEnd') != null){
+                
+                foreach($this->input->post('hidPunkteSchreiben') as $spieler => $neu){
+                    $this->db->set('wert', $neu);
+                    $this->db->where('spieler', $spieler);
+                    $this->db->where('konto', $this->session->userdata('konto'));
+                    $this->db->update('bonus');
+                }
+                                
                 $this->session->sess_destroy();
                 redirect(site_url());
+            
+            // Neuen Charakter anlegen    
+            }elseif($this->input->post('sbmCharakterNeu') != null){
+            
+                $this->load->library('form_validation');
+                $this->form_validation->set_rules('txtCharakterNeu', 'Charakter', 'required|trim');
+                $this->form_validation->set_rules('selCharakterKlasse', 'Klasse', 'required|trim');
+                $this->form_validation->set_rules('intBonus', 'Bonus', 'required|trim');
+                $this->form_validation->set_rules('selTwink', 'Twink', 'required');
+                                
+                if($this->form_validation->run()){
+                    
+                    if($this->input->post('selTwink') != 'no'){
+                        $this->db->insert('spieler', array('name' => $this->input->post('txtCharakterNeu'),
+                                                           'klasse' => $this->input->post('selCharakterKlasse'),
+                                                           'parent' => $this->input->post('selTwink')));
+                    }else{
+                        $this->db->insert('spieler', array('name' => $this->input->post('txtCharakterNeu'),
+                                                           'klasse' => $this->input->post('selCharakterKlasse')));
+                                                           
+                        $this->db->insert('bonus', array('spieler' => $this->input->post('txtCharakterNeu'),
+                                                         'konto' => $this->session->userdata('konto'),
+                                                         'wert' => $this->input->post('intBonus')));
+                        
+                                                            
+                    }
+                    
+                    
+                    
+                }
             }
             
             //$this->db->insert('raids_spieler', array);
@@ -92,19 +147,7 @@
             
             
             
-            // Konten auslesen
-            $query = $this->db->get('konten');
-            $konten = $query->result_array();
-            if(!empty($konten)){
-              foreach($konten as &$konto){
-                  if($konto['kurz'] == $this->session->userdata('konto')){
-                    $konto['checked'] = "selected";
-                  }else{
-                    $konto['checked'] = "";
-                  }
-              }
-            }
-            $vars['konten'] = $konten;
+
             
             $vars['raidid'] = $this->session->userdata('raidid'); 
         
@@ -118,13 +161,16 @@
             $query = $this->db->query("SELECT * FROM spieler
                                        LEFT JOIN raids_spieler ON raids_spieler.spieler = spieler.name
                                                                AND raids_spieler.raidid = ".$this->session->userdata('raidid')."
-                                       LEFT JOIN bonus ON spieler.name = bonus.spieler;");
+                                       LEFT JOIN bonus ON spieler.name = bonus.spieler
+                                       WHERE parent IS NULL;");
                                        //WHERE konto = '".$this->session->userdata('konto')."';");
                         
             // Result verarbeiten
             $teilnehmer = array();
-            
+            $alle = array();
             if(!empty($query->result_array())){
+            
+                $vars['alle'] = $query->result_array();
             
                 foreach($query->result_array() as $key => $row){
                 
@@ -136,19 +182,15 @@
                         $bonuspunkte[$row['name']] = $row['wert'];
                     }
                     
-                    if($row['parent'] != null){
-                        
-                        
-                        $vars['klasse'][$row['klasse']]['spieler'][$key]['name'] = $row['name'];
-                        
-                        
-                            
-                    }
-                    else{
-                        $vars['klasse'][$row['klasse']]['spieler'][$key]['name'] = $row['name'];
-                    }
-                    
+                    $vars['klasse'][$row['klasse']]['spieler'][$key]['name'] = $row['name'];
                     $vars['klasse'][$row['klasse']]['spieler'][$key]['klasse'] = $row['klasse'];
+                                        
+                    $this->db->select('name, klasse')->from('spieler')->where('parent', $row['name']);
+                    $query2 = $this->db->get();
+                    
+                    $vars['klasse'][$row['klasse']]['spieler'][$key]['alt'] = $query2->result_array();
+                    
+                                           
                 }
             }
             
@@ -207,6 +249,7 @@
                         
             // Anzeige der Livepunkte
             $vars['live'][0]['dkpstand'] = array();
+            $vars['live'][0]['bonus'] = '-';
             if(!empty($ausgegeben)){
                 $i = 0;
                 foreach($ausgegeben as $spieler => $wert){
@@ -218,21 +261,23 @@
                 }
             }
                
-          
             $i = 0;
-            foreach($bonuspunkte as $spieler => $bonus){
-
-              if(isset($ausgegeben[$spieler])){
-                  $vars['sum'][0]['punktestand'][$i]['spieler'] = $spieler;
-                  $vars['sum'][0]['punktestand'][$i]['bonus_alt'] = intval($bonus);
-                  $vars['sum'][0]['punktestand'][$i]['bonus_neu'] = intval($bonus);
-              }else{
-                  $vars['sum'][0]['punktestand'][$i]['spieler'] = $spieler;
-                  $vars['sum'][0]['punktestand'][$i]['bonus_alt'] = intval($bonus);
-                  $vars['sum'][0]['punktestand'][$i]['bonus_neu'] = intval($bonus)+1;    
-              }
-              $i++;
-            
+            $vars['sum'] = array();
+            if(!empty($bonuspunkte)){
+                foreach($bonuspunkte as $spieler => $bonus){
+                  if(isset($ausgegeben[$spieler])){
+                      $vars['sum'][0]['punktestand'][$i]['spieler'] = $spieler;
+                      $vars['sum'][0]['punktestand'][$i]['bonus_alt'] = intval($bonus);
+                      $vars['sum'][0]['punktestand'][$i]['bonus_neu'] = intval($bonus);
+                      $vars['sum'][0]['punktestand'][$i]['highlight'] = '';
+                  }else{
+                      $vars['sum'][0]['punktestand'][$i]['spieler'] = $spieler;
+                      $vars['sum'][0]['punktestand'][$i]['bonus_alt'] = intval($bonus);
+                      $vars['sum'][0]['punktestand'][$i]['bonus_neu'] = intval($bonus)+1;
+                      $vars['sum'][0]['punktestand'][$i]['highlight'] = 'bold';    
+                  }
+                  $i++;
+                }
             }
         
                 
