@@ -36,11 +36,18 @@ class Start extends CI_Controller {
                       $query = $this->db->get();
                       $result = $query->result();
                       
+                      // Existiert der Raid?
                       if(!empty($result)){
-                          $this->setRaidId($raidId);
-                                                                    // Existiert der Raid?        // Weiter im Text ...
+                          // Raid aktiv?
+                          if($result[0]->active){    
+                              $this->setRaidId($raidId);
+                          // Raid beendet?
+                          }else{
+                              redirect(site_url('live/index/'.$raidId));
+                          }
+                      // Fehlermeldung (Raid nicht gefunden)
                       }else{
-                          $vars['msg'][0]['text'] = "Diese Raid-ID existiert nicht!";   // Fehlermeldung (Raid nicht gefunden)
+                          $vars['msg'][0]['text'] = "Diese Raid-ID existiert nicht!";   
                       }
                   }else{
                       $vars['msg'][0]['text'] = "Bitte eine korrekte Raid-ID eingeben (5-stellig).";  // Ungültige ID    
@@ -51,6 +58,16 @@ class Start extends CI_Controller {
        }else{
           redirect('raid');
        }
+       
+       $vars['history'] = array();
+       
+       $this->db->select('*')->from('raids')->where('active', false)->order_by('timestamp')->limit(3);
+       $query = $this->db->get();
+       if(!empty($query->result_array())){
+            $vars['history'] = $query->result_array();
+       }
+       
+       
        
        $this->parser->parse('start', $vars);          
   	}

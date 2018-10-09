@@ -4,7 +4,7 @@
     class raid extends CI_Controller{
     
         public function index(){
-                        
+            $this->session->sess_destroy();            
             // Session ID vergeben? -> Falls nicht, redirect!
             if(!$this->session->has_userdata('raidid')){
                 redirect('start');
@@ -22,7 +22,7 @@
                   }
               }
             }
-            $vars['konten'] = $konten;            
+            $vars['konten'] = $konten;   
             
             
             
@@ -104,6 +104,10 @@
                     $this->db->where('konto', $this->session->userdata('konto'));
                     $this->db->update('bonus');
                 }
+                
+                $this->db->set('active', false);
+                $this->db->where('raidid', $this->session->userdata('raidid'));
+                $this->db->update('raids');
                                 
                 $this->session->sess_destroy();
                 redirect(site_url());
@@ -112,7 +116,7 @@
             }elseif($this->input->post('sbmCharakterNeu') != null){
             
                 $this->load->library('form_validation');
-                $this->form_validation->set_rules('txtCharakterNeu', 'Charakter', 'required|trim');
+                $this->form_validation->set_rules('txtCharakterNeu', 'Charakter', 'required|trim|is_unique[spieler.name]');
                 $this->form_validation->set_rules('selCharakterKlasse', 'Klasse', 'required|trim');
                 $this->form_validation->set_rules('intBonus', 'Bonus', 'required|trim');
                 $this->form_validation->set_rules('selTwink', 'Twink', 'required');
@@ -243,13 +247,13 @@
             $vars['live'][0]['anzahl_teilnehmer'] = count($teilnehmer);
             
             // Bonus-DKP String bauen
-            if(!empty($teilnehmer) && !empty($bekommen)){
+            $vars['live'][0]['bonus'] = '-';
+            if(!empty($teilnehmer)){
               $vars['live'][0]['bonus'] = implode(', ', array_diff($teilnehmer, $bekommen));
             }
                         
             // Anzeige der Livepunkte
             $vars['live'][0]['dkpstand'] = array();
-            $vars['live'][0]['bonus'] = '-';
             if(!empty($ausgegeben)){
                 $i = 0;
                 foreach($ausgegeben as $spieler => $wert){
@@ -259,7 +263,7 @@
                     $vars['live'][0]['dkpstand'][$i]['rest'] = $bonuspunkte[$spieler]+100-$wert;
                     $i++; 
                 }
-            }
+            }           
                
             $i = 0;
             $vars['sum'] = array();
@@ -268,7 +272,12 @@
                   if(isset($ausgegeben[$spieler])){
                       $vars['sum'][0]['punktestand'][$i]['spieler'] = $spieler;
                       $vars['sum'][0]['punktestand'][$i]['bonus_alt'] = intval($bonus);
-                      $vars['sum'][0]['punktestand'][$i]['bonus_neu'] = intval($bonus);
+                      
+                      if($ausgegeben[$spieler] > 100){
+                        $vars['sum'][0]['punktestand'][$i]['bonus_neu'] = intval($bonus)+100-$ausgegeben[$spieler];
+                      }else{
+                        $vars['sum'][0]['punktestand'][$i]['bonus_neu'] = intval($bonus);
+                      }
                       $vars['sum'][0]['punktestand'][$i]['highlight'] = '';
                   }else{
                       $vars['sum'][0]['punktestand'][$i]['spieler'] = $spieler;
