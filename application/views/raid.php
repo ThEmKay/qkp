@@ -47,7 +47,7 @@
              
         <nav class="navbar navbar-expand-lg navbar-light bg-dark">
             <form class="form-inline" method="POST" action="<?php echo current_url(); ?>" style="margin:0">
-                <span style="color:#fff"><b>Raid-ID:</b> {raidid}&nbsp;-&nbsp;<b>Konto:</b>&nbsp;</span>
+                <span style="color:#fff"><b>Raid-ID:</b> {raidid}&nbsp;-&nbsp;<b>Schl&uuml;ssel:</b> {schluessel}&nbsp;-&nbsp;<b>Konto:</b>&nbsp;</span>
                 <select class="custom-select mr-sm-5" name="selKonto" onchange="submit();">
                     {konten}
                     <option {checked} value="{kurz}">{name}</option>
@@ -259,6 +259,12 @@
                         <input type="submit" name="sbmEnd" class="btn btn-warning" value="Raid beenden und Punkte schreiben" />
                       </form>
                       {/sum}
+                    </div>
+                    <h3>Danger-Zone</h3>
+                    <div>
+                        <form action="<?php echo current_url(); ?>" method="POST">
+                            <input type="submit" name="sbmDeleteRaid" class="btn btn-danger" value="Raid verwerfen" />
+                        </form>
                     </div>
                   </div>
                 </div>

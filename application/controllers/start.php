@@ -24,11 +24,17 @@ class Start extends CI_Controller {
           $vars['msg'] = Array();        
           if(!empty($_POST)){
               if(isset($_POST['newRaid'])){                                     // Neuen Raid anlegen
-                  $raidId = mt_rand(10000, 99999);                              // Raid-ID generieren (unique)
-                  $this->db->insert('raids', array('raidid' => $raidId));        // Datensatz in der Datenbank anlegen
-                  $this->setRaidId($raidId);                                    // Weiter ...
+                  // Masterkey gültig?
+                  if($this->input->post('masterkey') == 'asdf123'){
+                      $raidId = mt_rand(10000, 99999);                          // Raid-ID generieren (unique)
+                      $key = random_string('alnum', 5);
+                      $this->db->insert('raids', array('raidid' => $raidId, 'schluessel' => $key));   // Datensatz in der Datenbank anlegen
+                      $this->setRaidId($raidId, $key);                          // Weiter ...
+                  }else{
+                      $vars['msg'][0]['text'] = '<div class="alert alert-danger" role="alert">Master-Key ist ung&uuml;ltig.</div>';
+                  }
                   
-              }elseif(isset($_POST['oldRaid'])){                                      // Alten Raid aufrufen
+              }elseif(isset($_POST['oldRaid'])){                                              // Alten Raid aufrufen
                   if(isset($_POST['raidId']) && strlen(trim(intval($_POST['raidId']))) == 5){ // Raid-ID eingegeben?
                       $raidId = trim(intval($_POST['raidId']));
                       
@@ -40,17 +46,17 @@ class Start extends CI_Controller {
                       if(!empty($result)){
                           // Raid aktiv?
                           if($result[0]->active){    
-                              $this->setRaidId($raidId);
+                              $this->setRaidId($raidId, $result[0]->schluessel);
                           // Raid beendet?
                           }else{
                               redirect(site_url('live/index/'.$raidId));
                           }
                       // Fehlermeldung (Raid nicht gefunden)
                       }else{
-                          $vars['msg'][0]['text'] = "Diese Raid-ID existiert nicht!";   
+                          $vars['msg'][0]['text'] = '<div class="alert alert-warning" role="alert">Diese Raid-ID existiert nicht.</div>';   
                       }
                   }else{
-                      $vars['msg'][0]['text'] = "Bitte eine korrekte Raid-ID eingeben (5-stellig).";  // Ungültige ID    
+                      $vars['msg'][0]['text'] = '<div class="alert alert-warning" role="alert">Bitte eine korrekte Raid-ID eingeben (5-stellig).</div>';  // Ungültige ID    
                   }        
               }   
           }
@@ -67,16 +73,15 @@ class Start extends CI_Controller {
             $vars['history'] = $query->result_array();
        }
        
-       
-       
        $this->parser->parse('start', $vars);          
   	}
   
-  private function setRaidId($i){
-      echo $i;
+  private function setRaidId($i, $s){
+
       $this->session->set_userdata('raidid', $i);                               // Session Raid-Id vergeben
-      $this->session->set_userdata('konto', 'ZG');
-      redirect('raid');                                               // Weiterleitung zur Übersichtsseite 
+      $this->session->set_userdata('schluessel', $s);                           // Schlüssel setzen
+      $this->session->set_userdata('konto', 'ZG');                              // Standardkonto setzen
+      redirect('raid');                                                         // Weiterleitung zur Übersichtsseite 
   }
   
   

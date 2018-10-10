@@ -20,7 +20,8 @@
             }
             
             body{
-                background: transparent
+                background: transparent;
+                padding-top: 5px
             }
             
             .card{
@@ -30,7 +31,10 @@
         </style>
         
         <div class="container">
-            {msg}Fehlermeldung: {text}{/msg}
+            <div class="alert alert-danger" role="alert">
+                Kamelpimmel! Testversion =)
+            </div>
+            {msg}{text}{/msg}
             <form name="frmStart" action="<?php echo site_url(); ?>" method="POST">
               <div class="row">
                 <div class="card" style="width: 18rem;">
@@ -39,7 +43,7 @@
                     <h5 class="card-title">Raid aufrufen</h5>
                     <p class="card-text">Einen bereits begonnenen Raid mithilfe der Id wieder &ouml;ffnen, um diesen weiter zu bearbeiten.</p>
                     <input placeholder="Raid-Id" class="form-control" type="text" name="raidId" />
-                    <input placeholder="Schl&uuml;ssel" class="form-control" style="margin-top:3px" type="text" name="key" />
+                    <input placeholder="Schl&uuml;ssel" class="form-control" style="margin-top:3px" type="password" name="key" />
                     <input class="form-control btn btn-primary" style="margin-top:3px" type="submit" name="oldRaid" value="Aufrufen" />
                   </div>
                 </div>
@@ -48,7 +52,7 @@
                   <div class="card-body">
                     <h5 class="card-title">Neuer Raid</h5>
                     <p class="card-text">Eine neue Raid-Id anlegen.</p>
-                    <input placeholder="Schl&uuml;ssel" class="form-control" style="margin-top:3px" type="text" name="masterkey" />
+                    <input placeholder="Schl&uuml;ssel" class="form-control" style="margin-top:3px" type="password" name="masterkey" />
                     <input class="form-control btn btn-primary" style="margin-top:3px" name="newRaid" type="submit" value="Starten" />
                   </div>
                 </div>

@@ -4,7 +4,7 @@
     class raid extends CI_Controller{
     
         public function index(){
-            $this->session->sess_destroy();            
+          
             // Session ID vergeben? -> Falls nicht, redirect!
             if(!$this->session->has_userdata('raidid')){
                 redirect('start');
@@ -24,15 +24,7 @@
             }
             $vars['konten'] = $konten;   
             
-            
-            
-            
-                      
-            /// POST
-            
             $acc_active = 0;
-            
-            
             
             // Punktekonto wechseln
             if($this->input->post('selKonto') != null){
@@ -42,8 +34,9 @@
                 
             // Teilnehmer hinzufügen/entfernen
             }elseif($this->input->post('sbmTeilnehmer') != null){
+            
                 if(!empty($this->input->post('teilnehmer')))
-                
+           
                     $this->db->select('spieler')->from('raids_spieler')->where('raidid', $this->session->userdata('raidid'));
                     $query = $this->db->get();
                     $result = $query->result_array();
@@ -54,20 +47,29 @@
                         }
                     }
 
-                    $remove = array_diff($exists, $this->input->post('teilnehmer'));
+                    if($this->input->post('teilnehmer') == null){
+                        $teiln = array();
+                    }else{
+                        $teiln = $this->input->post('teilnehmer');  
+                    }
+                    
+                    $remove = array_diff($exists, $teiln);
+
                     if(!empty($remove)){
                       $this->db->where('raidid', $this->session->userdata('raidid'));
                       $this->db->where_in('spieler', $remove);
                       $this->db->delete('raids_spieler');
                     }
 
-                    foreach($this->input->post('teilnehmer') as $teilnehmer){
-                        if(!in_array($teilnehmer, $exists)){
-                        $this->db->insert('raids_spieler', array('raidid' => $this->session->userdata('raidid'),
-                                                                 'spieler' => $teilnehmer));
+                    if(!empty($teiln)){
+                        foreach($teiln as $teilnehmer){
+                            if(!in_array($teilnehmer, $exists)){
+                            $this->db->insert('raids_spieler', array('raidid' => $this->session->userdata('raidid'),
+                                                                     'spieler' => $teilnehmer));
+                            }
                         }
                     }
-                    
+  
                 $acc_active = 1;
                            
             // Loot hinzufügen        
@@ -136,38 +138,34 @@
                                                          'wert' => $this->input->post('intBonus')));
                         
                                                             
-                    }
-                    
-                    
-                    
+                    } 
                 }
+            }elseif($this->input->post('sbmDeleteRaid') != null){
+            
+                $this->db->where('raidid', $this->session->userdata('raidid'));
+                $this->db->delete('raids');
+                
+                $this->db->where('raidid', $this->session->userdata('raidid'));
+                $this->db->delete('beute');
+                
+                $this->db->where('raidid', $this->session->userdata('raidid'));
+                $this->db->delete('raids_spieler');
+                
+                $this->session->sess_destroy();
+                redirect(site_url());                                          
             }
             
-            //$this->db->insert('raids_spieler', array);
-            
-          
-          
-            
-            
-            
-            
-
-            
-            $vars['raidid'] = $this->session->userdata('raidid'); 
-        
-        
-        
-        
+            $vars['raidid'] = $this->session->userdata('raidid');
+            $vars['schluessel'] = $this->session->userdata('schluessel'); 
         
             ############ BLOCK TEILNEHMER
-            
             // Alle Spieler + Info der Teilnahme am Raid aus der Datenbank holen. 
             $query = $this->db->query("SELECT * FROM spieler
                                        LEFT JOIN raids_spieler ON raids_spieler.spieler = spieler.name
                                                                AND raids_spieler.raidid = ".$this->session->userdata('raidid')."
                                        LEFT JOIN bonus ON spieler.name = bonus.spieler
-                                       WHERE parent IS NULL;");
-                                       //WHERE konto = '".$this->session->userdata('konto')."';");
+                                       WHERE parent IS NULL
+                                       AND konto = '".$this->session->userdata('konto')."';");
                         
             // Result verarbeiten
             $teilnehmer = array();
@@ -198,8 +196,7 @@
                 }
             }
             
-            ############ BLOCK BEUTE         
-                       
+            ############ BLOCK BEUTE                  
             //
             $vars['beute'][0]['msg'] = array();
             $vars['beute'][0]['loot'] = array();
@@ -240,7 +237,6 @@
               $vars['beute'][0]['loothinzu'] = array();
               $vars['beute'][0]['msg'][0]['text'] = "Noch keine Teilnehmer festgelegt.";
             }
-            
             
             ############ BLOCK Zusammenfassung
             // Teilnehmer zählen
@@ -289,14 +285,10 @@
                 }
             }
         
-                
-        
             $vars['acc_active'] = $acc_active;
         
             $this->parser->parse('raid', $vars);
-        
         }    
-    
     }
 
 ?>

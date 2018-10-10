@@ -19,7 +19,8 @@
             }
             
             body{
-                background: transparent
+                background: transparent;
+                padding-bottom: 20px
             }
                    
                   ul{   border: 1px solid #eee;
@@ -46,7 +47,7 @@
             .col{
               min-height: 200px
             }
-            
+            /*
             table{
               width: 100%;
             }
@@ -64,19 +65,11 @@
             td{
               padding: 3px;
             }
-            
+              */
             td img{
               width: 20px
             }
-            
-            footer{
-              background-color: #111;
-              position: absolute;
-              bottom: 0;
-              width: 100%;
-              text-align: center
-            }
-                  
+                              
         </style>   
              
        
@@ -95,7 +88,7 @@
                         <div class="alert alert-info" role="alert">
                           F&uuml;r Bonuspunkte qualifizierte Spieler werden <strong>hervorgehoben</strong>.
                         </div>
-                        <table border="1">
+                        <table border="1" class="table table-striped">
                           <tr>
                             <th>
                               Spieler
@@ -152,7 +145,7 @@
                         <div class="alert alert-info" role="alert">
                           F&uuml;r Bonuspunkte qualifizierte Spieler werden <strong>hervorgehoben</strong>.
                         </div>                      
-                        <table border="1">
+                        <table class="table table-sm table-striped table-hover">
                           <tr>
                             <th>
                               Spieler
@@ -162,7 +155,7 @@
                             </th>                           
                           </tr>
                           {punktestand}
-                          <tr style="background-color:{color}">
+                          <tr>
                             <td><img src="<?php echo base_url('img') ?>/class_{klasse}.jpg" /> {spieler}</td>
                             <td style="text-align:right;padding-right:10px">{ausgegeben}</td>
                           </tr>
@@ -171,7 +164,7 @@
                       </div>
                       <h3>Beute</h3>
                       <div>
-                        <table border="1">
+                        <table class="table table-sm table-striped table-hover">
                           <tr>
                             <th>
                               Spieler
@@ -184,7 +177,7 @@
                             </th>                           
                           </tr>                      
                           {loot}
-                          <tr style="background-color:{color}">
+                          <tr>
                             <td><img src="<?php echo base_url('img') ?>/class_{klasse}.jpg" /> {spieler}</td>
                             <td>{gegenstand}</td>
                             <td style="text-align:right;padding-right:10px">{wert}</td>
@@ -197,11 +190,6 @@
                 </div>
             </div>       
         </div>
-        <footer class="footer">
-          <div class="container">
-            <p class="text-muted">Made with &#10084; by Basti</p>
-          </div>
-        </footer>
         
   <script>
   $( function() {
