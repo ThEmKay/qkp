@@ -264,6 +264,7 @@
                     <div>
                         <form action="<?php echo current_url(); ?>" method="POST">
                             <input type="submit" name="sbmDeleteRaid" class="btn btn-danger" value="Raid verwerfen" />
+                            <input type="submit" name="sbmParcRaid" class="btn btn-warning" value="Raid parken" />
                         </form>
                     </div>
                   </div>

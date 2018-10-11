@@ -153,6 +153,9 @@
                 
                 $this->session->sess_destroy();
                 redirect(site_url());                                          
+            }elseif($this->input->post('sbmParcRaid') != null){
+                $this->session->sess_destroy();
+                redirect(site_url());
             }
             
             $vars['raidid'] = $this->session->userdata('raidid');

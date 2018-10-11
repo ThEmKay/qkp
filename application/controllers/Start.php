@@ -28,8 +28,7 @@ class Start extends CI_Controller {
                   if($this->input->post('masterkey') == 'asdf123'){
                       $raidId = mt_rand(10000, 99999);                          // Raid-ID generieren (unique)
                       $key = random_string('alnum', 5);
-                      $this->db->query("INSERT INTO raids (raidid, schluessel) VALUES (".$raidId.", '".$key."')");
-                      //$this->db->insert('raids', array('raidid' => $raidId, 'schluessel' => $key));   // Datensatz in der Datenbank anlegen
+                      $this->db->insert('raids', array('raidid' => $raidId, 'schluessel' => $key));   // Datensatz in der Datenbank anlegen
                       $this->setRaidId($raidId, $key);                          // Weiter ...
                   }else{
                       $vars['msg'][0]['text'] = '<div class="alert alert-danger" role="alert">Master-Key ist ung&uuml;ltig.</div>';
@@ -46,7 +45,7 @@ class Start extends CI_Controller {
                       // Existiert der Raid?
                       if(!empty($result)){
                           // Raid aktiv?
-                          if($result[0]->active){    
+                          if(intval($result[0]->active)){    
                               $this->setRaidId($raidId, $result[0]->schluessel);
                           // Raid beendet?
                           }else{
