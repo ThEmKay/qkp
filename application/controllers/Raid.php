@@ -151,12 +151,12 @@
                 $this->db->where('raidid', $this->session->userdata('raidid'));
                 $this->db->delete('raids_spieler');
                 
-                $this->destroySession();
+                destroySession();
                 redirect(site_url());
                                                           
             }elseif($this->input->post('sbmParcRaid') != null){
             
-                $this->destroySession();
+                destroySession();
                 redirect(site_url());
             }
             
