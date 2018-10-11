@@ -42,30 +42,10 @@
             .ui-widget-content{
               opacity: .9
             }
-            
-                  
+             
             .col{
               min-height: 200px
             }
-            /*
-            table{
-              width: 100%;
-            }
-            
-            th{
-              background-color: #333;
-              color: #fff;
-              text-align: center
-            }
-            
-            tr:hover td{
-                background-color: #fff
-            }
-            
-            td{
-              padding: 3px;
-            }
-              */
             td img{
               width: 20px
             }
@@ -76,8 +56,6 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <br />
-                    <p><a class="btn btn-dark" href="<?php echo site_url(); ?>" href="#" role="button">&laquo; zur&uuml;ck zum Start</a></p>
                     {msg}
                     {datum}
                     {active}
@@ -88,7 +66,7 @@
                         <div class="alert alert-info" role="alert">
                           F&uuml;r Bonuspunkte qualifizierte Spieler werden <strong>hervorgehoben</strong>.
                         </div>
-                        <table border="1" class="table table-striped">
+                        <table class="table table-striped table-sm table-hover table-bordered">
                           <tr>
                             <th>
                               Spieler
@@ -104,7 +82,7 @@
                             </th>                            
                           </tr>
                           {punktestand}
-                          <tr style="background-color:{color}">
+                          <tr>
                             <td><img src="<?php echo base_url('img') ?>/class_{klasse}.jpg" /> {spieler}</td>
                             <td style="text-align:right;padding-right:10px">{wert}</td>
                             <td style="text-align:right;padding-right:10px">{ausgegeben}</td>
@@ -115,7 +93,7 @@
                       </div>
                       <h3>Beute</h3>
                       <div>
-                        <table border="1">
+                        <table class="table table-striped table-sm table-hover table-bordered">
                           <tr>
                             <th>
                               Spieler

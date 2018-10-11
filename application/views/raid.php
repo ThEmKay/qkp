@@ -15,6 +15,11 @@
         
         </script>
         <style>
+        
+          body{
+              background-color: #f4f4f4;
+          }
+        
           ul{   border: 1px solid #eee;
               width: 142px;
               min-height: 20px;
@@ -40,14 +45,37 @@
                     width: 100%
                   }
                   
-                  th{
-                    background-color: #E6E0F8
-                  }      
+                  .druide{
+                      color: #FF7D0A
+                  }
+                  .jaeger{
+                      color: #ABD473
+                  }
+                  .magier{
+                      color: #69CCF0
+                  }
+                  .paladin{
+                      color: #f58cba
+                  }
+                  .priester{
+                      color: #fff
+                  }
+                  .schurke{
+                      color: #fff569
+                  }
+                  .krieger{
+                      color: #c79c6e
+                  }
+                  .hexenmeister{
+                      color: #9482C9
+                  }
+     
         </style>   
              
         <nav class="navbar navbar-expand-lg navbar-light bg-dark">
             <form class="form-inline" method="POST" action="<?php echo current_url(); ?>" style="margin:0">
-                <span style="color:#fff"><b>Raid-ID:</b> {raidid}&nbsp;-&nbsp;<b>Schl&uuml;ssel:</b> {schluessel}&nbsp;-&nbsp;<b>Konto:</b>&nbsp;</span>
+                <span style="color:#fff"><b>Raid-ID:</b> {raidid}&nbsp;-&nbsp;<b>Schl&uuml;ssel:</b> {schluessel}&nbsp;-&nbsp;
+                <b>Live-Link:</b>&nbsp;<a target="blank" href="<?php echo site_url('live'); ?>/index/{raidid}">Klick</a>&nbsp;-&nbsp;<b>Konto:</b>&nbsp;</span>
                 <select class="custom-select mr-sm-5" name="selKonto" onchange="submit();">
                     {konten}
                     <option {checked} value="{kurz}">{name}</option>
@@ -108,16 +136,14 @@
             </div>
           </div>
         </div>
-
-        
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div id="accordion">
                     <h3>Teilnehmer</h3>
-                    <div>
+                    <div style="background-position: 0% 100%; background-image:url(<?php echo base_url('img/ironforge.jpg') ?>);">
                         <form action="<?php echo site_url('raid'); ?>" method="POST">
-                          <div class="row">
+                          <div class="row" style="background-color:#333;opacity:.7;padding:3px;margin-bottom:3px">
                             {klasse}
                             <div class="col {klasse}">
                               <div style="margin-bottom:5px">
@@ -128,20 +154,19 @@
                                 <input class="form-check-input" name="teilnehmer[]" type="checkbox" {checked} value="{name}" id="{name}">
                                 <label class="form-check-label" for="{name}" style="margin-bottom:3px">
                                   {name}
-                                  {alt}<div><img style="width:15px" src="<?php echo base_url(); ?>img/class_{alt_klasse}.jpg" />{alt_name}</div>{/alt}                                 
+                                  {alt}<div class="{alt_klasse}"><img style="width:15px" src="<?php echo base_url(); ?>img/class_{alt_klasse}.jpg" />{alt_name}</div>{/alt}                                 
                                 </label>
                                 &nbsp;
                               </div>
                               {/spieler}
                             </div>
                             {/klasse}
-                            
                           </div>
                           <input class="btn btn-success" type="submit" name="sbmTeilnehmer" value="Speichern" />                
                         </form>                         
                     </div>
                     <h3>Beute</h3>
-                    <div>
+                    <div style="background-position: 0% 100%; background-image:url(<?php echo base_url('img/gryphon.jpg') ?>);">
                       {beute}
                         {msg}
                           <div class="alert alert-warning" role="alert">{text}</div>
@@ -160,7 +185,8 @@
                         <hr />
                         {/loothinzu}
                         <form action="<?php echo site_url('raid'); ?>" method="POST">
-                        <table>
+                        <table class="table-sm table-striped table-hover table-light">
+                          <thead class="thead-dark">
                           <tr>
                             <th style="width:5%"">
                               &nbsp;
@@ -175,6 +201,7 @@
                               Gegenstand
                             </th>
                           </tr>
+                          </thead>
                         {beuteliste}
                           <tr>
                             <td><input name="chkLoot[]" value="{lootid}" type="checkbox" /></td><td>{wert}</td><td>{spieler}</td><td>{gegenstand}</td>
@@ -187,30 +214,34 @@
                       {/beute}
                     </div>
                     <h3>Live-Daten</h3>
-                    <div>
+                    <div style="background-position: 0% 100%; background-image:url(<?php echo base_url('img/darkportal.jpg') ?>);">
                       {live}
-                        <div style="padding:5px">
+                        <div style="padding:5px;color:#fff">
                           <b>Teilnehmer:</b> {anzahl_teilnehmer}
                         </div>
-                        <div style="padding:5px">
+                        <div style="padding:5px;color:#fff">
                           <b>Bonuspunkte:</b> {bonus}
                         </div>
-                        <div style="padding:5px">
+                        <div style="padding:5px;color:#fff">
                           <b>Punktestand:</b>
                         </div>
-                        <table>
-                            <th style="width:40%"">
-                              Spieler
-                            </th>
-                            <th style="width:20%">
-                              Punkte ausgegeben
-                            </th>
-                            <th style="width:20%">
-                              Punkte gesamt
-                            </th>
-                            <th style="width:20%">
-                              Punkte Rest
-                            </th>                        
+                        <table class="table-sm table-striped table-hover table-light">
+                            <thead class="thead-dark">
+                            <tr>
+                              <th style="width:40%"">
+                                Spieler
+                              </th>
+                              <th style="width:20%">
+                                Punkte ausgegeben
+                              </th>
+                              <th style="width:20%">
+                                Punkte gesamt
+                              </th>
+                              <th style="width:20%">
+                                Punkte Rest
+                              </th>
+                            </tr>
+                            </thead>                        
                             {dkpstand}
                             <tr>
                               <td>
@@ -231,11 +262,12 @@
                       {/live}
                     </div>
                     <h3>Abschluss</h3>
-                    <div>
-                      Voraussichtliche Bonuspunkte nach dem Raid:
+                    <div style="padding-bottom:100px;background-position: 0% 100%; background-image:url(<?php echo base_url('img/announcement.jpg') ?>);">
+                      <span style="color:#fff">Voraussichtliche Bonuspunkte nach dem Raid:</span>
                       {sum}
                         <form action="<?php echo current_url(); ?>" method="POST">
-                          <table>
+                          <table class="table table-sm table-striped table-hover table-light">
+                          <thead class="thead-dark">
                           <tr>
                             <th>
                                 Spieler
@@ -247,6 +279,7 @@
                                 Neu
                             </th>
                           </tr>
+                          </thead>
                           {punktestand}
                           <tr style="font-weight:{highlight}">
                               <td>

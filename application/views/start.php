@@ -24,12 +24,30 @@
             .card{
                 opacity: .9
             }
+            
+            .jumbotron{
+              color: #fff;
+              padding: 2rem 2rem;
+              background-image: url('<?php echo base_url(); ?>/img/announcement.jpg');
+              background-position: 50% 50%;
+              opacity: .9;
+              background-size: cover
+            }
                     
         </style>
         
         <div class="container">
-            <div class="alert alert-danger" role="alert">
-                Kamelpimmel! Testversion =)
+            <div class="jumbotron">
+              <h1 class="display-5">Semper Fidelis Raid-Punkteverwaltung</h1>
+              <p class="lead">Folgende Gilden sind Teil des aktuellen Raidb&uuml;ndnisses:
+              <p><b>&raquo; Geheime Zuflucht</b></p>
+              <p><b>&raquo; Arms of Lordaeron</b></p>
+              <hr class="my-4">
+              <p>Wir spielen gemeinsam auf dem WoW-Classic Server <i>Nefarian</i>.</p>
+              <p class="lead">
+                <a class="btn btn-dark btn-lg" href="<?php echo site_url(); ?>/punkte" role="button">Punkte aller Teilnehmer ansehen</a>
+                <a class="btn btn-dark btn-lg" href="http://heteria.de/eqdkp" role="button">Raidplaner aufrufen</a>
+              </p>
             </div>
             {msg}{text}{/msg}
             <form name="frmStart" action="<?php echo site_url(); ?>" method="POST">
