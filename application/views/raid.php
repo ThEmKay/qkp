@@ -128,7 +128,7 @@
                                 <input class="form-check-input" name="teilnehmer[]" type="checkbox" {checked} value="{name}" id="{name}">
                                 <label class="form-check-label" for="{name}" style="margin-bottom:3px">
                                   {name}
-                                  {alt}<div><img style="width:15px" src="<?php echo base_url(); ?>img/class_{klasse}.jpg" />{name}</div>{/alt}                                 
+                                  {alt}<div><img style="width:15px" src="<?php echo base_url(); ?>img/class_{alt_klasse}.jpg" />{alt_name}</div>{/alt}                                 
                                 </label>
                                 &nbsp;
                               </div>

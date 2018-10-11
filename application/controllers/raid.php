@@ -15,7 +15,7 @@
             $konten = $query->result_array();
             if(!empty($konten)){
               foreach($konten as &$konto){
-                  if($konto['kurz'] == $this->session->userdata('konto')){
+                  if($konto['kurz'] == $_SESSION['konto']){
                     $konto['checked'] = "selected";
                   }else{
                     $konto['checked'] = "";
@@ -103,7 +103,7 @@
                 foreach($this->input->post('hidPunkteSchreiben') as $spieler => $neu){
                     $this->db->set('wert', $neu);
                     $this->db->where('spieler', $spieler);
-                    $this->db->where('konto', $this->session->userdata('konto'));
+                    $this->db->where('konto', $_SESSION['konto']);
                     $this->db->update('bonus');
                 }
                 
@@ -167,7 +167,7 @@
             }
             
             $vars['raidid'] = $_SESSION['raidid'];
-            $vars['schluessel'] = $this->session->userdata('schluessel'); 
+            $vars['schluessel'] = $_SESSION['schluessel']; 
         
             ############ BLOCK TEILNEHMER
             // Alle Spieler + Info der Teilnahme am Raid aus der Datenbank holen. 
@@ -200,12 +200,11 @@
                     $vars['klasse'][$row['klasse']]['spieler'][$key]['name'] = $row['name'];
                     $vars['klasse'][$row['klasse']]['spieler'][$key]['klasse'] = $row['klasse'];
                                         
-                    $this->db->select('name, klasse')->from('spieler')->where('parent', $row['name']);
+                    $this->db->select('name as alt_name, klasse as alt_klasse')->from('spieler')->where('parent', $row['name']);
                     $query2 = $this->db->get();
-                    
+
                     $vars['klasse'][$row['klasse']]['spieler'][$key]['alt'] = $query2->result_array();
-                    
-                                           
+                                                   
                 }
             }
             
