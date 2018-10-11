@@ -1,7 +1,7 @@
 <?php
     defined('BASEPATH') OR exit('No direct script access allowed');
     
-    class raid extends CI_Controller{
+    class Raid extends CI_Controller{
     
         public function index(){
           
