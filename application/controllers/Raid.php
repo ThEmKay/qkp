@@ -111,7 +111,9 @@
                 $this->db->where('raidid', $this->session->userdata('raidid'));
                 $this->db->update('raids');
                                 
-                $this->destroySession();
+            $this->session->unset_userdata('raidid');
+            $this->session->unset_userdata('konto');
+            $this->session->unset_userdata('schluessel');
                 redirect(site_url());
             
             // Neuen Charakter anlegen    
@@ -151,12 +153,16 @@
                 $this->db->where('raidid', $this->session->userdata('raidid'));
                 $this->db->delete('raids_spieler');
                 
-                destroySession();
+            $this->session->unset_userdata('raidid');
+            $this->session->unset_userdata('konto');
+            $this->session->unset_userdata('schluessel');
                 redirect(site_url());
                                                           
             }elseif($this->input->post('sbmParcRaid') != null){
             
-                destroySession();
+                $this->session->unset_userdata('raidid');
+                $this->session->unset_userdata('konto');
+                $this->session->unset_userdata('schluessel');
                 redirect(site_url());
             }
             
@@ -294,12 +300,7 @@
         
             $this->parser->parse('raid', $vars);
         }
-        
-        private function destroySession(){
-            $this->session->unset_userdata('raidid');
-            $this->session->unset_userdata('konto');
-            $this->session->unset_userdata('schluessel');
-        }
+
             
     }
 
