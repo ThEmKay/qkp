@@ -20,7 +20,7 @@ class Start extends CI_Controller {
   	 */
   	public function index()
   	{        
-        if(!$this->session->has_userdata('raidid')){
+        if($this->session->userdata('raidid') == null){
           $vars['msg'] = Array();        
           if(!empty($_POST)){
               if(isset($_POST['newRaid'])){                                     // Neuen Raid anlegen

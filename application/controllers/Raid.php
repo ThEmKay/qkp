@@ -6,7 +6,7 @@
         public function index(){
           
             // Session ID vergeben? -> Falls nicht, redirect!
-            if(!$this->session->has_userdata('raidid')){
+            if($this->session->userdata('raidid') == null){
                 redirect('start');
             }
             
@@ -176,7 +176,9 @@
                                                                AND raids_spieler.raidid = ".$this->session->userdata('raidid')."
                                        LEFT JOIN bonus ON spieler.name = bonus.spieler
                                        WHERE parent IS NULL
-                                       AND konto = '".$this->session->userdata('konto')."';");
+                                       AND konto = 'ZG';");
+                                       
+                                       //AND konto = '".$this->session->userdata('konto')."';");
                         
             // Result verarbeiten
             $teilnehmer = array();
