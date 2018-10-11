@@ -52,7 +52,6 @@
                               
         </style>   
              
-       
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -123,7 +122,7 @@
                         <div class="alert alert-info" role="alert">
                           F&uuml;r Bonuspunkte qualifizierte Spieler werden <strong>hervorgehoben</strong>.
                         </div>                      
-                        <table class="table table-sm table-striped table-hover">
+                        <table class="table table-sm table-striped table-hover table-bordered">
                           <tr>
                             <th>
                               Spieler
@@ -142,7 +141,7 @@
                       </div>
                       <h3>Beute</h3>
                       <div>
-                        <table class="table table-sm table-striped table-hover">
+                        <table class="table table-sm table-striped table-hover table">
                           <tr>
                             <th>
                               Spieler

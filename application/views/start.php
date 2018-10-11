@@ -35,7 +35,31 @@
             }
                     
         </style>
-        
+        <nav class="nav justify-content-end nav-pills">
+            <!--<button type="button" class="btn btn-outline-danger" style="margin:.5em">made with &#9825;</button>-->
+            <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#disclaimer" style="margin:.5em">Disclaimer</button>
+        </nav>
+        <div class="modal fade" id="disclaimer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Disclaimer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                World of Warcraft&trade; and Blizzard Entertainment&reg; are 
+              	all trademarks or registered trademarks of Blizzard 
+              	Entertainment in the United States and/or other 
+              	countries. These terms and all related materials, 
+              	logos, and images are copyright &copy; Blizzard 
+              	Entertainment. This site is in no way associated with 
+              	or endorsed by Blizzard Entertainment&reg;.
+              </div>
+            </div>
+          </div>
+        </div>               
         <div class="container">
             <div class="jumbotron">
               <h1 class="display-5">Semper Fidelis Raid-Punkteverwaltung</h1>
