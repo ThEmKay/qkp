@@ -1,6 +1,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     </head>
     <body>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -56,6 +57,8 @@
               	logos, and images are copyright &copy; Blizzard 
               	Entertainment. This site is in no way associated with 
               	or endorsed by Blizzard Entertainment&reg;.
+                <hr />
+                Alle verwendeten Icons kommen hierher: https://fontawesome.com/license - thX!
               </div>
             </div>
           </div>
@@ -67,7 +70,7 @@
               <p><b>&raquo; Geheime Zuflucht</b></p>
               <p><b>&raquo; Arms of Lordaeron</b></p>
               <hr class="my-4">
-              <p>Wir spielen gemeinsam auf dem WoW-Classic Server <i>Nefarian</i>.</p>
+              <p>Wir spielen gemeinsam auf dem WoW-Classic Server <i>Nefarian</i>: <a href="http://classic-wow.org" target="blank">Link <i class="fas fa-external-link-alt"></i></a>.</p>
               <p class="lead">
                 <a class="btn btn-dark btn-lg" href="<?php echo site_url(); ?>/punkte" role="button">Punkte aller Teilnehmer ansehen</a>
                 <a class="btn btn-dark btn-lg" href="http://heteria.de/eqdkp" role="button">Raidplaner aufrufen</a>
