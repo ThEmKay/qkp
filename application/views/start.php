@@ -19,11 +19,15 @@
             
             body{
                 background: transparent;
-                padding-top: 5px
+                padding-top: 5px;
+                padding-left: 10%;
+                padding-right: 10%;
+                padding-bottom: 10%
             }
             
             .card{
-                opacity: .9
+                opacity: .9;
+                margin-top: 3px
             }
             
             .jumbotron{
@@ -36,6 +40,14 @@
             }
                     
         </style>
+        
+        <script>
+        $(function () {
+              $('[data-toggle="tooltip"]').tooltip();
+          });
+          
+        </script>
+        
         <nav class="nav justify-content-end nav-pills">
             <!--<button type="button" class="btn btn-outline-danger" style="margin:.5em">made with &#9825;</button>-->
             <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#disclaimer" style="margin:.5em">Disclaimer</button>
@@ -63,23 +75,50 @@
             </div>
           </div>
         </div>               
-        <div class="container">
+        <div class="container-fluid">
             <div class="jumbotron">
-              <h1 class="display-5">Semper Fidelis Raid-Punkteverwaltung</h1>
-              <p class="lead">Folgende Gilden sind Teil des aktuellen Raidb&uuml;ndnisses:
+              <h1 class="display-5">Raidb&uuml;ndnis "Wir wipen" - Punkteverwaltung</h1>
+              <p class="lead">Folgende Gilden sind Teil des aktuellen B&uuml;ndnisses:
               <p><b>&raquo; Geheime Zuflucht</b></p>
               <p><b>&raquo; Arms of Lordaeron</b></p>
+              <p><b>&raquo; Semper Fidelis</b></p>
               <hr class="my-4">
               <p>Wir spielen gemeinsam auf dem WoW-Classic Server <i>Nefarian</i>: <a href="http://classic-wow.org" target="blank">Link <i class="fas fa-external-link-alt"></i></a>.</p>
               <p class="lead">
-                <a class="btn btn-dark btn-lg" href="<?php echo site_url(); ?>/punkte" role="button">Punkte aller Teilnehmer ansehen</a>
-                <a class="btn btn-dark btn-lg" href="http://heteria.de/eqdkp" role="button">Raidplaner aufrufen</a>
+                <a class="btn btn-dark btn-lg" href="<?php echo site_url(); ?>/punkte" role="button"><i class="fas fa-list-ol"></i> Punkte aller Teilnehmer ansehen</a>
+                <a class="btn btn-dark btn-lg" href="http://heteria.de/eqdkp" role="button"><i class="far fa-calendar-alt"></i> Raidplaner aufrufen</a>
               </p>
             </div>
             {msg}{text}{/msg}
+            <?php echo validation_errors('<div class="alert alert-danger" role="alert">', '</div>'); ?>
             <form name="frmStart" action="<?php echo site_url(); ?>" method="POST">
               <div class="row">
-                <div class="col-sm">
+                <div class="col-sm-3">
+                  <div class="card">
+                    <img class="card-img-top" src="<?php echo base_url(); ?>/img/Circle-of-Light.jpg" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">Termine</h5>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item" data-toggle="tooltip" data-placement="left" title="Zul'Gurub"><img style="width:35px" src="<?php echo base_url(); ?>/img/zg.png" /> So. 19:30 bis 22:00 Uhr</li>
+                        <li class="list-group-item" data-toggle="tooltip" data-placement="left" title="Ruinen von Ahn'Qiraj"><img style="width:35px" src="<?php echo base_url(); ?>/img/aq10.png" /> Mo. 19:30 bis 22:00 Uhr</li>
+                        <li class="list-group-item" data-toggle="tooltip" data-placement="left" title="Geschmolzener Kern" style="color:#999;font-style:italic"><img style="width:35px" src="<?php echo base_url(); ?>/img/mc.png" /> Fr. 20:00 bis 22:30 Uhr (geplant)</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="card">
+                    <img class="card-img-top" src="<?php echo base_url(); ?>/img/card3.jpg" alt="Card image cap">
+                    <div class="card-body">
+                      <h5 class="card-title">Historie</h5>
+                      <p class="card-text">Beute und Bonuspunkte der letzten Raids ansehen.</p>
+                      {history}
+                      <a href="<?php echo site_url('live'); ?>/index/{raidid}">{timestamp}</a>
+                      {/history}
+                    </div>
+                  </div>
+                </div>                               
+                <div class="col-sm-3">
                   <div class="card">
                     <img class="card-img-top" src="<?php echo base_url(); ?>/img/card1.jpg" alt="Card image cap">
                     <div class="card-body">
@@ -91,7 +130,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-sm">
+                <div class="col-sm-3">
                   <div class="card">
                     <img class="card-img-top" src="<?php echo base_url(); ?>/img/card2.jpg" alt="Card image cap">
                     <div class="card-body">
@@ -101,19 +140,7 @@
                       <input class="form-control btn btn-primary" style="margin-top:3px" name="newRaid" type="submit" value="Starten" />
                     </div>
                   </div>
-                </div>
-                <div class="col-sm">
-                  <div class="card">
-                    <img class="card-img-top" src="<?php echo base_url(); ?>/img/card3.jpg" alt="Card image cap">
-                    <div class="card-body">
-                      <h5 class="card-title">Historie</h5>
-                      <p class="card-text">Beute und Bonuspunkte der letzten Raids ansehen.</p>
-                      {history}
-                      <a href="<?php echo site_url('live'); ?>/index/{raidid}">{timestamp}</a>
-                      {/history}
-                    </div>
-                  </div>
-                </div>                                
+                </div>                                               
               </div>
            </form>           
         </div>

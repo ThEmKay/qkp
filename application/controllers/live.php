@@ -19,6 +19,7 @@ class Live extends CI_Controller{
             $infos = $result->result_array();     
             $datetime = explode('-', $infos[0]['timestamp']);
             $vars['datum'] = 'Raid <b>'.$raidid.'</b> am <b>'.substr($datetime[2], 0, 2).'.'.$datetime[1].'.'.$datetime[0].'</b>';
+            $vars['konto'] = $infos[0]['konto'];
             
             if($infos[0]['active'] == true){
                 $vars['active'] = '<div class="alert alert-success" role="alert">Dieser Raid ist noch nicht abgeschlossen.</div>';
@@ -29,7 +30,8 @@ class Live extends CI_Controller{
             $query = $this->db->query("SELECT raids_spieler.raidid, raids_spieler.spieler, spieler.klasse, bonus.wert+100 AS wert, SUM(beute.wert) AS ausgegeben
                               FROM raids_spieler
                               left join beute ON beute.spieler = raids_spieler.spieler and beute.raidid = ".intval($raidid)."
-                              left join bonus ON bonus.spieler = raids_spieler.spieler and bonus.konto = 'ZG'
+                              left join raids ON raids.raidid = raids_spieler.raidid
+                              left join bonus ON bonus.spieler = raids_spieler.spieler and bonus.konto = raids.konto 
                               left join spieler ON spieler.name = raids_spieler.spieler
                               where raids_spieler.raidid = ".intval($raidid)."
                               GROUP BY raids_spieler.raidid, raids_spieler.spieler, spieler.klasse, bonus.wert");

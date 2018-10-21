@@ -8,27 +8,17 @@
             // Session ID vergeben? -> Falls nicht, redirect!
             if(!isset($_SESSION['raidid'])){
                 redirect('start');
-            }
-
-            // Konten auslesen
-            $query = $this->db->get('konten');
-            $konten = $query->result_array();
-            if(!empty($konten)){
-              foreach($konten as &$konto){
-                  if($konto['kurz'] == $_SESSION['konto']){
-                    $konto['checked'] = "selected";
-                  }else{
-                    $konto['checked'] = "";
-                  }
-              }
-            }
-            $vars['konten'] = $konten;   
+            }  
             
             $acc_active = 0;
             
             // Punktekonto wechseln
             if($this->input->post('selKonto') != null){
-                $this->session->set_userdata('konto', $this->input->post('selKonto'));
+                $_SESSION['konto'] = $this->input->post('selKonto');
+                
+                $this->db->set('konto', $this->input->post('selKonto'));
+                $this->db->where('raidid', $_SESSION['raidid']);
+                $this->db->update('raids');
                 
                 $acc_active = 0;
                 
@@ -82,7 +72,7 @@
                                                      'spieler' => $this->input->post('selSpieler'),
                                                      'gegenstand' => $this->input->post('txtGegenstand'),
                                                      'wert' => $this->input->post('intWert'),
-                                                     'konto' => 'ZG'));
+                                                     'konto' => $_SESSION['konto']));
                 }
                 
                 $acc_active = 1;
@@ -122,7 +112,6 @@
                 $this->load->library('form_validation');
                 $this->form_validation->set_rules('txtCharakterNeu', 'Charakter', 'required|trim|is_unique[spieler.name]');
                 $this->form_validation->set_rules('selCharakterKlasse', 'Klasse', 'required|trim');
-                $this->form_validation->set_rules('intBonus', 'Bonus', 'required|trim');
                 $this->form_validation->set_rules('selTwink', 'Twink', 'required');
                                 
                 if($this->form_validation->run()){
@@ -132,14 +121,16 @@
                                                            'klasse' => $this->input->post('selCharakterKlasse'),
                                                            'parent' => $this->input->post('selTwink')));
                     }else{
+                        
                         $this->db->insert('spieler', array('name' => $this->input->post('txtCharakterNeu'),
                                                            'klasse' => $this->input->post('selCharakterKlasse')));
-                                                           
-                        $this->db->insert('bonus', array('spieler' => $this->input->post('txtCharakterNeu'),
-                                                         'konto' => $this->session->userdata('konto'),
-                                                         'wert' => $this->input->post('intBonus')));
-                        
-                                                            
+                                                         
+                        foreach($this->input->post('intBonus') as $konto => $bonus){
+                            $this->db->insert('bonus', array('spieler' => $this->input->post('txtCharakterNeu'),
+                                              'konto' => $konto,
+                                              'wert' => intval($bonus)));
+                            
+                        }                                                                            
                     } 
                 }
             }elseif($this->input->post('sbmDeleteRaid') != null){
@@ -164,8 +155,36 @@
                 unset($_SESSION['konto']);
                 unset($_SESSION['schluessel']);
                 redirect(site_url());
-            }
+                
+            }elseif($this->input->post('sbmKontoNeu') != null){
             
+                $this->load->library('form_validation');
+                $this->form_validation->set_rules('txtKontoNeu', 'Konto', 'required|trim|is_unique[konten.name]');
+                $this->form_validation->set_rules('txtKontoNeuKurz', 'Konto kurz', 'required|trim|is_unique[konten.kurz}');
+                        
+                if($this->form_validation->run()){
+                  
+                  $this->db->trans_begin();
+                  $this->db->insert('konten', array('name' => $this->input->post('txtKontoNeu'),
+                                                   'kurz' => $this->input->post('txtKontoNeuKurz')));
+                                                   
+                  if(!empty($_POST['kontoNeuBonus'])){
+                      foreach($_POST['kontoNeuBonus'] as $spieler => $bonus){
+                          $this->db->insert('bonus', array('konto' => $this->input->post('txtKontoNeuKurz'),
+                                                           'spieler' => $spieler,
+                                                           'wert' => intval($bonus)));
+                      }
+                  }
+                  
+                  if ($this->db->trans_status() === FALSE){
+                          $this->db->trans_rollback();
+                  }else{
+                          $this->db->trans_commit();
+                  }                  
+                                                                                     
+               }
+            }
+                        
             $vars['raidid'] = $_SESSION['raidid'];
             $vars['schluessel'] = $_SESSION['schluessel']; 
         
@@ -175,10 +194,8 @@
                                        LEFT JOIN raids_spieler ON raids_spieler.spieler = spieler.name
                                                                AND raids_spieler.raidid = ".$_SESSION['raidid']."
                                        LEFT JOIN bonus ON spieler.name = bonus.spieler
-                                       WHERE parent IS NULL
-                                       AND konto = 'ZG';");
-                                       
-                                       //AND konto = '".$this->session->userdata('konto')."';");
+                                                       AND konto = '".$_SESSION['konto']."'
+                                       WHERE parent IS NULL;");
                         
             // Result verarbeiten
             $teilnehmer = array();
@@ -186,7 +203,8 @@
             if(!empty($query->result_array())){
             
                 $vars['alle'] = $query->result_array();
-            
+                $vars['alle2'] = $query->result_array();
+                
                 foreach($query->result_array() as $key => $row){
                 
                     $vars['klasse'][$row['klasse']]['klasse'] = $row['klasse'];
@@ -221,6 +239,7 @@
               }
               
               // Beuteliste
+              $loot = false;
               $this->db->select('*')->from('beute');
               $this->db->where('raidid', intval($_SESSION['raidid']));
               $query = $this->db->get();
@@ -229,6 +248,7 @@
               $ausgegeben = array();
               if(!empty($result)){
               
+                  $loot = true;
                   $vars['beute'][0]['beuteliste'] = $result;
                   
                   foreach($result as $res){
@@ -249,6 +269,26 @@
               $vars['beute'][0]['loothinzu'] = array();
               $vars['beute'][0]['msg'][0]['text'] = "Noch keine Teilnehmer festgelegt.";
             }
+            
+            // Konten auslesen
+            $query = $this->db->get('konten');
+            $konten = $query->result_array();
+            if(!empty($konten)){
+              foreach($konten as $key => &$konto){
+                  if($konto['kurz'] == $_SESSION['konto']){
+                    $konto['checked'] = "selected";
+                  }else{
+                    if($loot){
+                      unset($konten[$key]);
+                    }else{
+                      $konto['checked'] = "";
+                    } 
+                 }
+              }
+            }
+            $vars['konten'] = $konten;            
+            $vars['konten2'] = $konten;
+            
             
             ############ BLOCK Zusammenfassung
             // Teilnehmer zählen

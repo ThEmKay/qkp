@@ -20,6 +20,9 @@ class Start extends CI_Controller {
   	 */
   	public function index()
   	{        
+        $this->load->helper('date');
+        $this->load->library('form_validation');
+        
         if(!isset($_SESSION['raidid'])){
           $vars['msg'] = Array();        
           if(!empty($_POST)){
@@ -35,10 +38,13 @@ class Start extends CI_Controller {
                   }
                   
               }elseif(isset($_POST['oldRaid'])){                                              // Alten Raid aufrufen
-                  if(isset($_POST['raidId']) && strlen(trim(intval($_POST['raidId']))) == 5){ // Raid-ID eingegeben?
-                      $raidId = trim(intval($_POST['raidId']));
-                      
-                      $this->db->select('*')->from('raids')->where('raidid', $raidId);
+                  
+                  $this->form_validation->set_rules('raidId', 'Raid Id', 'required|trim|exact_length[5]');
+                  $this->form_validation->set_rules('key', 'Schl&uuml;ssel', 'required|trim|exact_length[5]');
+                  if($this->form_validation->run()){
+                  
+                      $this->db->select('*')->from('raids')->where('raidid', $this->input->post('raidId'))
+                                                           ->where('schluessel', $this->input->post('key'));
                       $query = $this->db->get();
                       $result = $query->result();
                       
@@ -46,7 +52,7 @@ class Start extends CI_Controller {
                       if(!empty($result)){
                           // Raid aktiv?
                           if(intval($result[0]->active)){    
-                              $this->setRaidId($raidId, $result[0]->schluessel);
+                              $this->setRaidId($result[0]->raidid, $result[0]->schluessel, $result[0]->konto);
                           // Raid beendet?
                           }else{
                               redirect(site_url('live/index/'.$raidId));
@@ -55,9 +61,7 @@ class Start extends CI_Controller {
                       }else{
                           $vars['msg'][0]['text'] = '<div class="alert alert-warning" role="alert">Diese Raid-ID existiert nicht.</div>';   
                       }
-                  }else{
-                      $vars['msg'][0]['text'] = '<div class="alert alert-warning" role="alert">Bitte eine korrekte Raid-ID eingeben (5-stellig).</div>';  // Ungültige ID    
-                  }        
+                  }       
               }   
           }
       		
@@ -70,17 +74,23 @@ class Start extends CI_Controller {
        $this->db->select('*')->from('raids')->where('active', false)->order_by('timestamp')->limit(3);
        $query = $this->db->get();
        if(!empty($query->result_array())){
-            $vars['history'] = $query->result_array();
+             $result= $query->result_array();
+             foreach($result as &$res){
+                $date = explode('-', $res['timestamp']);
+                $res['timestamp'] = $res['konto'].' - '.substr($date[2], 0, 2).'.'.$date[1].'.'.$date[0]; 
+             }
+       
+            $vars['history'] = $result;
        }
        
        $this->parser->parse('start', $vars);          
   	}
   
-  private function setRaidId($i, $s){
+  private function setRaidId($i, $s, $k = 'ZG'){
 
       $_SESSION['raidid'] = $i;                               // Session Raid-Id vergeben
       $_SESSION['schluessel'] = $s;                           // Schlüssel setzen
-      $_SESSION['konto'] = 'ZG';                              // Standardkonto setzen
+      $_SESSION['konto'] = $k;                                // Standardkonto setzen
       redirect('raid');                                       // Weiterleitung zur Übersichtsseite 
   }
   

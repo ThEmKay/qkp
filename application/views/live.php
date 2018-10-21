@@ -56,7 +56,12 @@
             <div class="row">
                 <div class="col-md-12">
                     {msg}
-                    {datum}
+                    <div class="alert alert-secondary" role="alert">
+                      {datum}
+                    </div>
+                    <div class="alert alert-secondary" role="alert">
+                      <b>Verwendetes Punktekonto:</b> {konto}
+                    </div>
                     {active}
                     {live}
                     <div id="accordion">

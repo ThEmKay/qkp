@@ -1,7 +1,8 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">      
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     </head>
     <body>                                                                                                                                                                                                        
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -9,10 +10,20 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
         <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
         <script>
-            $(document).ready(function(){
-            
+          $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+          })
+          
+          $(document).ready(function(){
+            $( "#accordion" ).accordion({collapsible: false, heightStyle: "content", active: {acc_active}});
+            $("[name='selTwink']").on("change", function(){
+              if($(this).val() == "no"){
+                $("[name='bonus']").show();  
+              }else{
+                $("[name='bonus']").hide();
+              }
             });
-        
+          });         
         </script>
         <style>
         
@@ -73,16 +84,24 @@
         </style>   
              
         <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-            <form class="form-inline" method="POST" action="<?php echo current_url(); ?>" style="margin:0">
+            <form class="form-inline" name="frmKonto" method="POST" action="<?php echo current_url(); ?>" style="margin:0">
                 <span style="color:#fff"><b>Raid-ID:</b> {raidid}&nbsp;-&nbsp;<b>Schl&uuml;ssel:</b> {schluessel}&nbsp;-&nbsp;
-                <b>Live-Link:</b>&nbsp;<a target="blank" href="<?php echo site_url('live'); ?>/index/{raidid}">Klick</a>&nbsp;-&nbsp;<b>Konto:</b>&nbsp;</span>
-                <select class="custom-select mr-sm-5" name="selKonto" onchange="submit();">
+                <b>Live-Link:</b>&nbsp;<a target="blank" href="<?php echo site_url('live'); ?>/index/{raidid}"><i class="fas fa-external-link-alt"></i></a>&nbsp;-&nbsp;<b>Konto:</b>&nbsp;</span>
+                <select class="custom-select mr-sm-5" style="margin-right:0 !important" name="selKonto" onchange="frmKonto.submit();">
                     {konten}
                     <option {checked} value="{kurz}">{name}</option>
                     {/konten}
                 </select>
+                &nbsp;
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#charakterModal">
-                  <b>+</b> Charakter hinzuf&uuml;gen
+                  <i class="fas fa-user" title="Neuer Charakter" data-toggle="tooltip" data-placement="bottom">
+                    <i class="fas fa-plus"></i>
+                  </i>&nbsp;
+                </button>
+                &nbsp;
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#kontoModal">
+                  <i class="fas fa-coins" title="Neues Punktekonto" data-toggle="tooltip" data-placement="bottom"></i>
+                  <i class="fas fa-plus"></i>
                 </button>
             </form>
         </nav>
@@ -114,10 +133,6 @@
                       <option value="schurke">Schurke</option>
                     </select> 
                   </div>
-                  <div class="form-group">
-                    <label>Startbonus</label>
-                    <input class="form-control" type="text" name="intBonus" size="2" value="0" />
-                  </div>
                   <div class="form-group">                  
                     <label>Twink?</label>
                     <select class="form-control" name="selTwink">
@@ -128,6 +143,12 @@
                       </option>
                       {/alle}
                     </select>
+                  </div>                  
+                  <div class="form-group" name="bonus">
+                    <label>Startbonus</label>
+                    {konten2}
+                      <input placeholder="{kurz}" class="form-control" type="text" name="intBonus[{kurz}]" size="2" style="margin-bottom:3px" />
+                    {/konten2}
                   </div>
               </div>
               <input type="submit" name="sbmCharakterNeu" class="btn btn-success" value="Speichern" />
@@ -136,6 +157,41 @@
             </div>
           </div>
         </div>
+        <div class="modal fade" id="kontoModal" tabindex="-1" role="dialog" aria-labelledby="kontoModal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Neues Punktekonto anlegen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="<?php echo current_url(); ?>" method="POST">
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input class="form-control" type="text" placeholder="Name" name="txtKontoNeu" />
+                  </div>
+                  <div class="form-group">
+                    <label>K&uuml;rzel</label>
+                    <input class="form-control" type="text" placeholder="Name" name="txtKontoNeuKurz" />
+                  </div>
+                  <label>Startbonus</label>                   
+                  <div class="form-group row">
+                    {alle2}
+                      <label for="Bonus{name}" class="col-sm-3 col-form-label">{name}</label>
+                        <div class="col-sm-9" style="margin-bottom:3px">
+                          <input type="text" name="kontoNeuBonus[{name}]" class="form-control" id="Bonus{name}" value="0">
+                        </div>
+                    {/alle2}
+                  </div>
+              </div>
+              <input type="submit" name="sbmKontoNeu" class="btn btn-success" value="Speichern" />
+              <div>&nbsp;</div>
+              </form>
+            </div>
+          </div>
+        </div>        
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -303,13 +359,6 @@
                   </div>
                 </div>
             </div>       
-        </div>
-        
-  <script>
-  $( function() {
-    $( "#accordion" ).accordion({collapsible: false, heightStyle: "content", active: {acc_active}});
-  } );
-  </script>
-        
+        </div>    
     </body>
 </html>
