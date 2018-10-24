@@ -183,6 +183,9 @@
                   }                  
                                                                                      
                }
+            }elseif($this->input->post('sbmBackup') != null){
+            
+                $this->db->query("INSERT INTO backup (date, konto, spieler, wert) SELECT \"".date("Y-m-d H:i:s", time())."\" AS date, konto, spieler, wert FROM bonus;");
             }
                         
             $vars['raidid'] = $_SESSION['raidid'];
@@ -228,6 +231,7 @@
             
             ############ BLOCK BEUTE                  
             //
+            $loot = false;
             $vars['beute'][0]['msg'] = array();
             $vars['beute'][0]['loot'] = array();
             if(!empty($teilnehmer)){
@@ -239,7 +243,6 @@
               }
               
               // Beuteliste
-              $loot = false;
               $this->db->select('*')->from('beute');
               $this->db->where('raidid', intval($_SESSION['raidid']));
               $query = $this->db->get();

@@ -18,25 +18,27 @@ class punkte extends CI_Controller{
           }        
         }
         $vars['kontofilter'] = $result;
-
+        unset($res);
     
         // Auswahlliste Klassen
         $query = $this->db->query("SELECT DISTINCT klasse AS value FROM spieler ORDER BY klasse ASC");
         $result = $query->result_array();
+
+        $klasse[0]['klasse'] = 'alle';
+        $klasse[0]['value'] = 'alle';
+
+        foreach($result as $key => $res){
         
-        $result[-1] = array('value' => "alle");
-        
-        foreach($result as &$res){
-          $res['klasse'] = ucfirst($res['value']);
+            $klasse[$key+1]['klasse'] = ucfirst($res['value']);
+            $klasse[$key+1]['value'] = $res['value'];
           
-          if($res['value'] == $this->input->post('selKlasse')){
-            $res['selected'] = 'selected'; 
-          }else{
-            $res['selected'] = '';
-          }
-          
+            if($res['value'] == $this->input->post('selKlasse')){
+              $klasse[$key+1]['selected'] = 'selected'; 
+            }else{
+              $klasse[$key+1]['selected'] = '';
+            } 
         }
-        $vars['klassenfilter'] = $result;
+        $vars['klassenfilter'] = $klasse;
         
         // Start Query Bonusliste holen
         $this->db->select('*')->from('bonus')->join('spieler', 'spieler.name = bonus.spieler', 'left');
@@ -47,8 +49,10 @@ class punkte extends CI_Controller{
           $this->db->where('konto', $vars['kontofilter'][0]['kurz']);
         }
         
-        if($this->input->post('selKlasse') != "alle"){
-          $this->db->where('klasse', $this->input->post('selKlasse'));                    
+        if($this->input->post('selKlasse') != null){
+          if($this->input->post('selKlasse') != "alle"){
+            $this->db->where('klasse', $this->input->post('selKlasse'));                    
+          }
         }
         
         if($this->input->post('selOrder') != null){

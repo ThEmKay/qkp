@@ -71,7 +71,7 @@ class Start extends CI_Controller {
        
        $vars['history'] = array();
        
-       $this->db->select('*')->from('raids')->where('active', false)->order_by('timestamp')->limit(3);
+       $this->db->select('*')->from('raids')->where('active', false)->order_by('timestamp', 'DESC')->limit(3);
        $query = $this->db->get();
        if(!empty($query->result_array())){
              $result= $query->result_array();

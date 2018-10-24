@@ -3,7 +3,7 @@
 class Live extends CI_Controller{
 
     public function index($raidid){
-    
+        
         $vars['msg'] = '';
         $vars['live'] = array();
         $vars['final'] = array();
@@ -27,7 +27,7 @@ class Live extends CI_Controller{
                 $vars['active'] = '<div class="alert alert-warning" role="alert">Raid abgeschlossen! Bonuspunkte wurden bereits verbucht.</div>';    
             }
         
-            $query = $this->db->query("SELECT raids_spieler.raidid, raids_spieler.spieler, spieler.klasse, bonus.wert+100 AS wert, SUM(beute.wert) AS ausgegeben
+            $query = $this->db->query("SELECT raids_spieler.raidid, raids_spieler.spieler, spieler.klasse, bonus.wert AS bonus, SUM(beute.wert) AS ausgegeben
                               FROM raids_spieler
                               left join beute ON beute.spieler = raids_spieler.spieler and beute.raidid = ".intval($raidid)."
                               left join raids ON raids.raidid = raids_spieler.raidid
@@ -47,7 +47,7 @@ class Live extends CI_Controller{
                     }
                     
                     $ref['ausgegeben'] = intval($ref['ausgegeben']);
-                    $ref['rest'] = intval($ref['wert']-$ref['ausgegeben']);
+                    $ref['rest'] = intval($ref['bonus']+100-$ref['ausgegeben']);
                     if($ref['ausgegeben'] == 0){
                         $ref['spieler'] = '<b>'.$ref['spieler'].'</b>';
                     }    

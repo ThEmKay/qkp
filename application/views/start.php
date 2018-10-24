@@ -112,9 +112,13 @@
                     <div class="card-body">
                       <h5 class="card-title">Historie</h5>
                       <p class="card-text">Beute und Bonuspunkte der letzten Raids ansehen.</p>
-                      {history}
-                      <a href="<?php echo site_url('live'); ?>/index/{raidid}">{timestamp}</a>
-                      {/history}
+                      <ul>
+                        {history}
+                        <li>
+                          <a href="<?php echo site_url('live'); ?>/index/{raidid}">{timestamp}</a>
+                        </li>
+                        {/history}
+                      </ul>
                     </div>
                   </div>
                 </div>                               
