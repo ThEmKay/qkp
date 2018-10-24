@@ -2,6 +2,7 @@
   <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <style>
       html { 
         background: url(<?php echo base_url(); ?>img/darkportal.jpg) no-repeat center center fixed; 
@@ -30,6 +31,7 @@
       <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
+          <p><a href="<?php echo site_url(); ?>" type="button" class="btn btn-dark"><i class="fas fa-arrow-circle-left"></i> zur&uuml;ck</a></p>
           <form class="form-inline" action="<?php echo current_url(); ?>" method="post" name="frmPunkte">
           <label>
             <span>Punktekonto:</span>&nbsp;
