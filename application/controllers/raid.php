@@ -90,6 +90,10 @@
             // Raid-Session beenden    
             }elseif($this->input->post('sbmEnd') != null){
                 
+                
+                var_dump($_SESSION['bonus']);
+                /*
+                
                 foreach($this->input->post('hidPunkteSchreiben') as $spieler => $neu){
                     $this->db->set('wert', $neu);
                     $this->db->where('spieler', $spieler);
@@ -104,7 +108,9 @@
                 unset($_SESSION['raidid']);
                 unset($_SESSION['konto']);
                 unset($_SESSION['schluessel']);
+                unset($_SESSION['bonus']);
                 redirect(site_url());
+                */
             
             // Neuen Charakter anlegen    
             }elseif($this->input->post('sbmCharakterNeu') != null){
@@ -147,6 +153,7 @@
                 unset($_SESSION['raidid']);
                 unset($_SESSION['konto']);
                 unset($_SESSION['schluessel']);
+                unset($_SESSION['bonus']);
                 redirect(site_url());
                                                           
             }elseif($this->input->post('sbmParcRaid') != null){
@@ -154,6 +161,7 @@
                 unset($_SESSION['raidid']);
                 unset($_SESSION['konto']);
                 unset($_SESSION['schluessel']);
+                unset($_SESSION['bonus']);
                 redirect(site_url());
                 
             }elseif($this->input->post('sbmKontoNeu') != null){
@@ -315,6 +323,8 @@
                     $i++; 
                 }
             }           
+            
+            $bonussave = array();
                
             $i = 0;
             $vars['sum'] = array();
@@ -326,19 +336,26 @@
                       
                       if($ausgegeben[$spieler] > 100){
                         $vars['sum'][0]['punktestand'][$i]['bonus_neu'] = intval($bonus)+100-$ausgegeben[$spieler];
+                        $bonussave[$spieler] = intval($bonus)+100-$ausgegeben[$spieler];
+                        
                       }else{
                         $vars['sum'][0]['punktestand'][$i]['bonus_neu'] = intval($bonus);
+                        $bonussave[$spieler] = intval($bonus);
                       }
                       $vars['sum'][0]['punktestand'][$i]['highlight'] = '';
                   }else{
                       $vars['sum'][0]['punktestand'][$i]['spieler'] = $spieler;
                       $vars['sum'][0]['punktestand'][$i]['bonus_alt'] = intval($bonus);
                       $vars['sum'][0]['punktestand'][$i]['bonus_neu'] = intval($bonus)+1;
-                      $vars['sum'][0]['punktestand'][$i]['highlight'] = 'bold';    
+                      $vars['sum'][0]['punktestand'][$i]['highlight'] = 'bold'; 
+                      $bonussave[$spieler] = intval($bonus)+1;   
                   }
                   $i++;
                 }
             }
+            
+            unset($_SESSION['bonus']);
+            $_SESSION['bonus'] = $bonussave;
         
             $vars['acc_active'] = $acc_active;
         
