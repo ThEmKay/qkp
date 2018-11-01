@@ -340,7 +340,6 @@
                           <tr style="font-weight:{highlight}">
                               <td>
                                 {spieler}
-                                <input type="hidden" name="hidPunkteSchreiben[{spieler}]" value="{bonus_neu}">
                               </td><td>{bonus_alt}</td><td>{bonus_neu}</td>
                           </tr>
                           {/punktestand}
