@@ -90,28 +90,25 @@
             // Raid-Session beenden    
             }elseif($this->input->post('sbmEnd') != null){
                 
-                
-                var_dump($_SESSION['bonus']);
-                /*
-                
-                foreach($this->input->post('hidPunkteSchreiben') as $spieler => $neu){
-                    $this->db->set('wert', $neu);
-                    $this->db->where('spieler', $spieler);
-                    $this->db->where('konto', $_SESSION['konto']);
-                    $this->db->update('bonus');
+                if($_SESSION['bonus'] != null){
+                    foreach($_SESSION['bonus'] as $spieler => $neu){
+                        $this->db->set('wert', $neu);
+                        $this->db->where('spieler', $spieler);
+                        $this->db->where('konto', $_SESSION['konto']);
+                        $this->db->update('bonus');
+                    }
+                    
+                    $this->db->set('active', false);
+                    $this->db->where('raidid', $_SESSION['raidid']);
+                    $this->db->update('raids');
+                                    
+                    unset($_SESSION['raidid']);
+                    unset($_SESSION['konto']);
+                    unset($_SESSION['schluessel']);
+                    unset($_SESSION['bonus']);
+                    redirect(site_url());
                 }
-                
-                $this->db->set('active', false);
-                $this->db->where('raidid', $_SESSION['raidid']);
-                $this->db->update('raids');
-                                
-                unset($_SESSION['raidid']);
-                unset($_SESSION['konto']);
-                unset($_SESSION['schluessel']);
-                unset($_SESSION['bonus']);
-                redirect(site_url());
-                */
-            
+
             // Neuen Charakter anlegen    
             }elseif($this->input->post('sbmCharakterNeu') != null){
             
