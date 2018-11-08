@@ -136,6 +136,7 @@
                         }                                                                            
                     } 
                 }
+            // Raid löschen
             }elseif($this->input->post('sbmDeleteRaid') != null){
             
                 $this->db->where('raidid', $_SESSION['raidid']);
@@ -152,7 +153,8 @@
                 unset($_SESSION['schluessel']);
                 unset($_SESSION['bonus']);
                 redirect(site_url());
-                                                          
+            
+            // Raid parken                                              
             }elseif($this->input->post('sbmParcRaid') != null){
             
                 unset($_SESSION['raidid']);
@@ -160,7 +162,8 @@
                 unset($_SESSION['schluessel']);
                 unset($_SESSION['bonus']);
                 redirect(site_url());
-                
+            
+            // Neues Konto anlegen    
             }elseif($this->input->post('sbmKontoNeu') != null){
             
                 $this->load->library('form_validation');
@@ -173,15 +176,10 @@
                   $this->db->insert('konten', array('name' => $this->input->post('txtKontoNeu'),
                                                    'kurz' => $this->input->post('txtKontoNeuKurz')));
                                                    
-                  if(!empty($_POST['kontoNeuBonus'])){
-                      foreach($_POST['kontoNeuBonus'] as $spieler => $bonus){
-                          $this->db->insert('bonus', array('konto' => $this->input->post('txtKontoNeuKurz'),
-                                                           'spieler' => $spieler,
-                                                           'wert' => intval($bonus)));
-                      }
-                  }
-                  
+                  $this->db->query("INSERT INTO bonus (konto, spieler, wert) VALUES ('".$this->input->post('txtKontoNeuKurz')."', SELECT name FROM spieler WHERE parent IS NULL, 0");
+
                   if ($this->db->trans_status() === FALSE){
+                          echo "fehler";
                           $this->db->trans_rollback();
                   }else{
                           $this->db->trans_commit();

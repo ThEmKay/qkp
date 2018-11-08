@@ -176,15 +176,6 @@
                     <label>K&uuml;rzel</label>
                     <input class="form-control" type="text" placeholder="Name" name="txtKontoNeuKurz" />
                   </div>
-                  <label>Startbonus</label>                   
-                  <div class="form-group row">
-                    {alle2}
-                      <label for="Bonus{name}" class="col-sm-3 col-form-label">{name}</label>
-                        <div class="col-sm-9" style="margin-bottom:3px">
-                          <input type="text" name="kontoNeuBonus['{name}']" class="form-control" id="Bonus{name}" value="0">
-                        </div>
-                    {/alle2}
-                  </div>
               </div>
               <input type="submit" name="sbmKontoNeu" class="btn btn-success" value="Speichern" />
               <div>&nbsp;</div>
