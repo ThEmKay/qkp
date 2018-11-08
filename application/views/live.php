@@ -73,7 +73,7 @@
                       <h3>Punktestand</h3>
                       <div>
                         <div class="alert alert-info" role="alert">
-                          F&uuml;r Bonuspunkte (+1 beim nächsten Raid) qualifizierte Spieler werden <strong>hervorgehoben (fett markiert)</strong>.
+                          F&uuml;r Bonuspunkte (+1 beim n&auml;chsten Raid) qualifizierte Spieler werden <strong>hervorgehoben (fett markiert und GR&Uuml;N)</strong>.
                         </div>
                         <table class="table table-striped table-sm table-hover table-bordered">
                           <tr>
