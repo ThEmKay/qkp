@@ -181,7 +181,7 @@
                     {alle2}
                       <label for="Bonus{name}" class="col-sm-3 col-form-label">{name}</label>
                         <div class="col-sm-9" style="margin-bottom:3px">
-                          <input type="text" name="kontoNeuBonus[{name}]" class="form-control" id="Bonus{name}" value="0">
+                          <input type="text" name="kontoNeuBonus['{name}']" class="form-control" id="Bonus{name}" value="0">
                         </div>
                     {/alle2}
                   </div>
