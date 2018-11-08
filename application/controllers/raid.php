@@ -176,7 +176,7 @@
                   $this->db->insert('konten', array('name' => $this->input->post('txtKontoNeu'),
                                                    'kurz' => $this->input->post('txtKontoNeuKurz')));
                                                    
-                  $this->db->query("INSERT INTO bonus (konto, spieler, wert) VALUES ('".$this->input->post('txtKontoNeuKurz')."', SELECT name FROM spieler WHERE parent IS NULL, 0");
+                  $this->db->query("INSERT INTO bonus (konto, spieler, wert) SELECT ".$this->input->post('txtKontoNeuKurz')." AS konto, name, 0 AS wert FROM spieler WHERE parent IS NULL;");
 
                   if ($this->db->trans_status() === FALSE){
                           echo "fehler";
