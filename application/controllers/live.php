@@ -52,9 +52,9 @@ class Live extends CI_Controller{
                     if($ref['ausgegeben'] == 0){
                         $ref['spieler'] = '<span style="color:green"><b>'.$ref['spieler'].'</b></span>';
                     }elseif($ref['ausgegeben'] > 0 && $ref['ausgegeben'] < 100){
-                        $ref['spieler'] = '<span style="color:orange"><b>'.$ref['spieler'].'</b></span>';
+                        $ref['spieler'] = '<span style="color:orange">'.$ref['spieler'].'</span>';
                     }elseif($ref['ausgegeben'] >= 100){
-                        $ref['spieler'] = '<span style="color:red"><b>'.$ref['spieler'].'</b></span>';
+                        $ref['spieler'] = '<span style="color:red">'.$ref['spieler'].'</span>';
                     }     
                 }
                                 
