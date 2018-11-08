@@ -34,7 +34,8 @@ class Live extends CI_Controller{
                               left join bonus ON bonus.spieler = raids_spieler.spieler and bonus.konto = raids.konto 
                               left join spieler ON spieler.name = raids_spieler.spieler
                               where raids_spieler.raidid = ".intval($raidid)."
-                              GROUP BY raids_spieler.raidid, raids_spieler.spieler, spieler.klasse, bonus.wert");
+                              GROUP BY raids_spieler.raidid, raids_spieler.spieler, spieler.klasse, bonus.wert
+                              ORDER BY ausgegeben");
                               
             $result = $query->result_array();
                         
