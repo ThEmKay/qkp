@@ -35,7 +35,7 @@ class Live extends CI_Controller{
                               left join spieler ON spieler.name = raids_spieler.spieler
                               where raids_spieler.raidid = ".intval($raidid)."
                               GROUP BY raids_spieler.raidid, raids_spieler.spieler, spieler.klasse, bonus.wert
-                              ORDER BY ausgegeben");
+                              ORDER BY ausgegeben DESC");
                               
             $result = $query->result_array();
                         
@@ -50,8 +50,12 @@ class Live extends CI_Controller{
                     $ref['ausgegeben'] = intval($ref['ausgegeben']);
                     $ref['rest'] = intval($ref['bonus']+100-$ref['ausgegeben']);
                     if($ref['ausgegeben'] == 0){
-                        $ref['spieler'] = '<b>'.$ref['spieler'].'</b>';
-                    }    
+                        $ref['spieler'] = '<span style="color:green"><b>'.$ref['spieler'].'</b></span>';
+                    }elseif($ref['ausgegeben'] > 0 && < $ref['ausgegeben'] 100){
+                        $ref['spieler'] = '<span style="color:orange"><b>'.$ref['spieler'].'</b></span>';
+                    }elseif($ref['ausgegeben'] > 100){
+                        $ref['spieler'] = '<span style="color:red"><b>'.$ref['spieler'].'</b></span>';
+                    }     
                 }
                                 
                 // Loot auslesen
