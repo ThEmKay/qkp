@@ -27,13 +27,36 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>  
+
+    
+    <script>
+    
+    function holen(){
+                  
+                  alert(123);
+                  
+      $.get( "https://classicdb.ch/ajax.php?item=16827", function( data ) {
+
+          alert(data);
+        });
+    
+    
+    }
+    
+    
+    </script>
+    
     <div class="container-fluid">
+    
+      <a href="http://classicdb.ch/?item=16827"><span>asdasda</span></a>
+      
+      <span onclick="holen();">asdasdjkasdjkalsdjkl</span>
+      
       <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
           <p><a href="<?php echo site_url(); ?>" type="button" class="btn btn-dark"><i class="fas fa-arrow-circle-left"></i> zur&uuml;ck</a></p>
           <form class="form-inline" action="<?php echo current_url(); ?>" method="post" name="frmPunkte">
-          <label>
             <span>Punktekonto:</span>&nbsp;
           </label>
           <select name="selKonto" class="form-control form-inline" onchange="frmPunkte.submit()">
@@ -51,22 +74,7 @@
             {/klassenfilter}
           </select>
           </form>
-          <table class="table table-striped table-sm table-hover table-bordered" style="background-color:#fff">
-            <tr>
-              <th>
-                Spieler
-              </th>
-              <th>
-                Bonuspunkte
-              </th>                            
-            </tr>
-            {punktestand}
-            <tr>
-              <td><img src="<?php echo base_url('img') ?>/class_{klasse}.jpg" /> {spieler}</td>
-              <td style="text-align:right;padding-right:10px">{wert}</td>
-            </tr>
-            {/punktestand}
-          </table>  
+  
         </div>
         <div class="col-md-2"></div>
       </div>

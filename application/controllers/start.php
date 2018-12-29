@@ -71,7 +71,7 @@ class Start extends CI_Controller {
        
        $vars['history'] = array();
        
-       $this->db->select('*')->from('raids')->where('active', false)->order_by('timestamp', 'DESC')->limit(3);
+       $this->db->select('*')->from('raids')->where('active', false)->order_by('timestamp', 'DESC')->limit(10);
        $query = $this->db->get();
        if(!empty($query->result_array())){
              $result= $query->result_array();
@@ -83,16 +83,39 @@ class Start extends CI_Controller {
             $vars['history'] = $result;
        }
        
-       $this->parser->parse('start', $vars);          
+        // Auswahlliste Konten
+        $query = $this->db->query("SELECT name, kurz FROM konten");
+        $result = $query->result_array();
+        
+        if(!empty($result)){
+          foreach($result as &$res){
+            if($this->input->post('selKonto') == $res['kurz']){
+              $res['selected'] = 'selected';
+            }else{
+              $res['selected'] = '';
+            } 
+          }        
+        }
+        $vars['kontofilter'] = $result;
+        unset($res);
+        
+        $query = $this->db->query("SELECT DISTINCT klasse AS value FROM spieler ORDER BY klasse ASC");
+        $result = $query->result_array();
+
+        foreach($result as $key => $res){
+            $klasse[$key]['klasse'] = ucfirst($res['value']);
+            $klasse[$key]['value'] = $res['value'];
+        }
+        $vars['klassenfilter'] = $klasse;        
+
+        $this->parser->parse('start', $vars);          
   	}
   
   private function setRaidId($i, $s, $k = 'ZG'){
-
       $_SESSION['raidid'] = $i;                               // Session Raid-Id vergeben
       $_SESSION['schluessel'] = $s;                           // Schlüssel setzen
       $_SESSION['konto'] = $k;                                // Standardkonto setzen
       redirect('raid');                                       // Weiterleitung zur Übersichtsseite 
   }
-  
   
 }
