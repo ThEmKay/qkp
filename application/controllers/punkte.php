@@ -4,6 +4,10 @@ class punkte extends CI_Controller{
 
     public function index($konto = 'AQ20', $klasse = 'krieger', $sort = "ASC"){
     
+        if(!$this->input->is_ajax_request()) {
+          exit('No direct script access allowed');
+        }
+    
         $a = "SELECT
                 klasse,
                 COALESCE(parent, name) AS parent,
@@ -28,6 +32,10 @@ class punkte extends CI_Controller{
     
     
     public function loot($spieler = 'Ryf', $konto = 'AQ20'){
+        
+        if(!$this->input->is_ajax_request()) {
+          exit('No direct script access allowed');
+        }
         
         $q = $this->db->query("SELECT
                                 b.spieler,
