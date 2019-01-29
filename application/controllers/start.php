@@ -2,7 +2,16 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Start extends CI_Controller {
-
+	
+	
+	private $wochentage = array(1 => 'Montags',
+								2 => 'Dienstags',
+								3 => 'Mittwochs',
+								4 => 'Donnerstags',
+								5 => 'Freitags',
+								6 => 'Samstags',
+								7 => 'Sonntags');
+	
   	/**
   	 * Index Page for this controller.
   	 *
@@ -18,6 +27,43 @@ class Start extends CI_Controller {
   	 * map to /index.php/welcome/<method_name>
   	 * @see https://codeigniter.com/user_guide/general/urls.html
   	 */
+  	 public function portal(){
+  	 	
+		
+		$this->db->order_by('wochentag');
+		$q = $this->db->get('termine');
+		$r = $q->result_array();
+		if(!empty($r)){
+			foreach($r as &$res){
+				$res['wochentag'] = $this->wochentage[$res['wochentag']];
+			}
+		}
+		$position1 = "";
+		$position1 = $this->parser->parse('widgets/termine_widget', array('termine' => $r), true);
+		
+		
+		$q = $this->db->query("SELECT k.name, r.timestamp, r.raidid, r.konto, k.icon FROM raids r INNER JOIN konten k ON r.konto = k.kurz WHERE r.active = 0 ORDER BY r.timestamp DESC LIMIT 10");
+		$r = $q->result_array();
+		if(!empty($r)){
+			foreach($r as &$res){
+				$date = explode('-', substr($res['timestamp'], 0, 10));
+				$res['timestamp'] = $date[2].".".$date[1].".".$date[0];
+			}
+		}	
+		$position2 = $this->parser->parse('widgets/raidhistorie_widget', array('history' => $r), true);
+		
+		
+		$position4 = $this->parser->parse('widgets/liveraid_widget', array(), true);
+		
+		
+		
+		$this->parser->parse('portal_view', array('position1' => $position1,
+												  'position2' => $position2,
+												  'position4' => $position4));
+		
+  	 }
+  	 
+  	 
   	public function index()
   	{        
         $this->load->helper('date');
@@ -27,7 +73,7 @@ class Start extends CI_Controller {
           $vars['msg'] = Array();        
           if(!empty($_POST)){
               if(isset($_POST['newRaid'])){                                     // Neuen Raid anlegen
-                  // Masterkey gültig?
+                  // Masterkey gï¿½ltig?
                   if($this->input->post('masterkey') == 'asdf123'){
                       $raidId = mt_rand(10000, 99999);                          // Raid-ID generieren (unique)
                       $key = random_string('alnum', 5);
@@ -113,9 +159,9 @@ class Start extends CI_Controller {
   
   private function setRaidId($i, $s, $k = 'ZG'){
       $_SESSION['raidid'] = $i;                               // Session Raid-Id vergeben
-      $_SESSION['schluessel'] = $s;                           // Schlüssel setzen
+      $_SESSION['schluessel'] = $s;                           // Schlï¿½ssel setzen
       $_SESSION['konto'] = $k;                                // Standardkonto setzen
-      redirect('raid');                                       // Weiterleitung zur Übersichtsseite 
+      redirect('raid');                                       // Weiterleitung zur ï¿½bersichtsseite 
   }
   
 }
