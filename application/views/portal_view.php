@@ -136,7 +136,13 @@
 		    <span class="navbar-toggler-icon"></span>
 		  </button>
 		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-			{admincp}
+			<div class="mr-auto">{admincp}</div>
+			
+			    <span class="navbar-text">
+      {position5}
+    </span>
+			
+			
 		  </div>
 		</nav>                    
         <div class="container-fluid">
@@ -169,22 +175,16 @@
           </div>
           <div>&nbsp;</div>
           <div class="row">
-            <div class="col-sm-3 col-md-3">
+            <div class="col-12 col-sm-12 col-md-12">
               <div class="card position4">	
                 <div class="card-body">
                   {position4}
                 </div>
               </div>
             </div>
-            <div class="col-sm-9 col-md-9">
-              <div class="card position5">	
-                <div class="card-body">
-                  asdasdsd<i class="fas fa-chart-bar"></i>
-                </div>
-              </div>
-            </div>
           </div>         
         </div>
-                
+
+      
     </body>
 </html>

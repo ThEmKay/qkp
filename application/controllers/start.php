@@ -111,16 +111,14 @@ class Start extends CI_Controller {
 
 		if(!empty($r)){
 			$this->db->where('raidid', $r[0]['raidid']);
-			$q = $this->db->get('raids_spieler');
+			$this->db->join('spieler s', 's.name = rs.spieler');
+			$q = $this->db->get('raids_spieler rs');
+			
 			$teilnehmende = $q->result_array();	
 		}else{
 			$teilnehmende = array();
 		}
-		
-		
-		
-
-		$position4 = $this->parser->parse('widgets/liveraid_widget', array('live' => $r,
+		$position5 = $this->parser->parse('widgets/liveraid_widget', array('live' => $r,
 																		   'verfolgen' => $teilnehmende), true);
 		
 		
@@ -129,7 +127,8 @@ class Start extends CI_Controller {
 												  'position1' => $position1,
 												  'position2' => $position2,
 												  'position3' => $position3,
-												  'position4' => $position4));
+												  'position4' => $position4,
+												  'position5' => $position5));
 		
   	 }
   	 
