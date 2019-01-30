@@ -191,23 +191,23 @@
                     <div style="background-position: 0% 100%; background-image:url(<?php echo base_url('img/ironforge.jpg') ?>);">
                         <form action="<?php echo site_url('raid'); ?>" method="POST">
                           <div class="row" style="background-color:#333;opacity:.7;padding:3px;margin-bottom:3px">
-                            {klasse}
-                            <div class="col {klasse}">
-                              <div style="margin-bottom:5px">
-                                <img src="<?php echo base_url(); ?>img/class_{klasse}.jpg" />
-                              </div>
-                              {spieler}
-                              <div class="form-check">
-                                <input class="form-check-input" name="teilnehmer[]" type="checkbox" {checked} value="{name}" id="{name}">
-                                <label class="form-check-label" for="{name}" style="margin-bottom:3px">
-                                  {name}
-                                  {alt}<div class="{alt_klasse}"><img style="width:15px" src="<?php echo base_url(); ?>img/class_{alt_klasse}.jpg" />{alt_name}</div>{/alt}                                 
-                                </label>
-                                &nbsp;
-                              </div>
-                              {/spieler}
-                            </div>
-                            {/klasse}
+	                        {klasse}
+	                            <div class="col {klasse}">
+	                              <div style="margin-bottom:5px">
+	                                <img src="<?php echo base_url(); ?>img/class_{klasse}.jpg" />
+	                              </div>
+	                              {spieler}
+	                              <div class="form-check">
+	                                <input class="form-check-input" name="teilnehmer[]" type="checkbox" {checked} value="{name}" id="{name}">
+	                                <label class="form-check-label" for="{name}" style="margin-bottom:3px">
+	                                  {name}
+	                                  {alt}<div class="{alt_klasse}"><img style="width:15px" src="<?php echo base_url(); ?>img/class_{alt_klasse}.jpg" />{alt_name}</div>{/alt}                                 
+	                                </label>
+	                                &nbsp;
+	                              </div>
+	                              {/spieler}
+	                            </div>
+	                        {/klasse} 
                           </div>
                           <input class="btn btn-success" type="submit" name="sbmTeilnehmer" value="Speichern" />                
                         </form>                         

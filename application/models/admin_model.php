@@ -41,7 +41,8 @@ public function getClasses(){
 
 public function getRaids(){
 	$this->db->order_by('timestamp', 'DESC');
-	$q = $this->db->get('raids');
+	$this->db->join('konten k', 'k.kurz = r.konto', 'inner');
+	$q = $this->db->get('raids r');
 	return $q->result_array();
 }
 

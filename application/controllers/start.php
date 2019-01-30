@@ -11,6 +11,15 @@ class Start extends CI_Controller {
 								5 => 'Freitags',
 								6 => 'Samstags',
 								7 => 'Sonntags');
+								
+	private $klassen = array('druide' => 'Druide',
+							 'hexenmeister' => 'Hexenmeister',
+							 'jaeger' => 'J&auml;ger',
+							 'krieger' => 'Krieger',
+							 'magier' => 'Magier',
+							 'paladin' => 'Paladin',
+							 'priester' => 'Priester',
+							 'schurke' => 'Schurke');								
 	
   	/**
   	 * Index Page for this controller.
@@ -29,6 +38,16 @@ class Start extends CI_Controller {
   	 */
   	 public function portal(){
   	 	
+		if($this->input->post('adminpasswort')){
+			$_SESSION['sessid'] = time();
+			redirect(site_url('admin'));
+		}
+
+		if(isset($_SESSION['sessid'])){
+			$admincp = '<a href="'.site_url('admin').'" class="btn btn-primary" role="button"><i class="fas fa-tools"></i> Admin CP aufrufen <span class="badge badge-success">Authentifiziert</span></a>';
+		}else{
+			$admincp = '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login">Admin CP</button>';
+		}
 		
 		$this->db->order_by('wochentag');
 		$q = $this->db->get('termine');
@@ -53,12 +72,63 @@ class Start extends CI_Controller {
 		$position2 = $this->parser->parse('widgets/raidhistorie_widget', array('history' => $r), true);
 		
 		
-		$position4 = $this->parser->parse('widgets/liveraid_widget', array(), true);
+		
+		
+        // Auswahlliste Konten
+        $query = $this->db->query("SELECT name, kurz FROM konten");
+        $result = $query->result_array();
+        if(!empty($result)){
+          foreach($result as &$res){
+            if($this->input->post('selKonto') == $res['kurz']){
+              $res['selected'] = 'selected';
+            }else{
+              $res['selected'] = '';
+            } 
+          }        
+        }
+		
+		// Auswahlliste Klassen
+        $query = $this->db->query("SELECT DISTINCT klasse AS value FROM spieler ORDER BY klasse ASC");
+        $klassen = $query->result_array();
+        foreach($klassen as $key => $res){
+            $klasse[$key]['klasse'] = ucfirst($res['value']);
+            $klasse[$key]['value'] = $res['value'];
+        }	
+
+		$position3 = $this->parser->parse('widgets/bonuspunkte_widget', array('kontofilter' => $result,
+																			  'klassenfilter' => $klasse), true);
 		
 		
 		
-		$this->parser->parse('portal_view', array('position1' => $position1,
+		
+		// Aktuellsten Live-Raid holen
+		$this->db->where('active', TRUE);
+		$this->db->order_by('timestamp', 'DESC');
+		$this->db->limit(1);
+		$this->db->join('konten k', 'k.kurz = r.konto', 'inner');
+		$q = $this->db->get('raids r');
+		$r = $q->result_array();
+
+		if(!empty($r)){
+			$this->db->where('raidid', $r[0]['raidid']);
+			$q = $this->db->get('raids_spieler');
+			$teilnehmende = $q->result_array();	
+		}else{
+			$teilnehmende = array();
+		}
+		
+		
+		
+
+		$position4 = $this->parser->parse('widgets/liveraid_widget', array('live' => $r,
+																		   'verfolgen' => $teilnehmende), true);
+		
+		
+		
+		$this->parser->parse('portal_view', array('admincp' => $admincp,
+												  'position1' => $position1,
 												  'position2' => $position2,
+												  'position3' => $position3,
 												  'position4' => $position4));
 		
   	 }
@@ -132,7 +202,6 @@ class Start extends CI_Controller {
         // Auswahlliste Konten
         $query = $this->db->query("SELECT name, kurz FROM konten");
         $result = $query->result_array();
-        
         if(!empty($result)){
           foreach($result as &$res){
             if($this->input->post('selKonto') == $res['kurz']){
@@ -147,7 +216,6 @@ class Start extends CI_Controller {
         
         $query = $this->db->query("SELECT DISTINCT klasse AS value FROM spieler ORDER BY klasse ASC");
         $result = $query->result_array();
-
         foreach($result as $key => $res){
             $klasse[$key]['klasse'] = ucfirst($res['value']);
             $klasse[$key]['value'] = $res['value'];

@@ -20,7 +20,7 @@ class admin extends CI_Controller{
     public function index($spieler = ""){
 
 	     // Session ID vergeben? -> Falls nicht, redirect!
-        if(!isset($_SESSION['raidid'])){
+        if(!isset($_SESSION['sessid'])){
             redirect('start');
         } 
 		
@@ -79,7 +79,7 @@ class admin extends CI_Controller{
 	
 	public function raids($raidid = 0){
 	     // Session ID vergeben? -> Falls nicht, redirect!
-	    if(!isset($_SESSION['raidid'])){
+	    if(!isset($_SESSION['sessid'])){
 	        redirect('start');
 	    }
 		
@@ -124,7 +124,7 @@ class admin extends CI_Controller{
 
 			// LOOT ERFASSEN
 			if(isset($_POST['beuteneusubmit'])){
-				var_dump($_POST);
+
 				$this->db->insert('beute', array('gegenstand' => $this->input->post('beuteneuitem'),
 												 'konto' => $r1[0]['konto'],
 												 'raidid' => intval($raidid),
@@ -143,7 +143,7 @@ class admin extends CI_Controller{
 				$j = 0;
 				foreach($r4 as $beute){
 					if(!in_array($beute['spieler'], $b)){
-						$b[$j++] = $beute['spieler'];	
+						$b[$j++] = $beute['spieler'];
 					}
 				}
 			}
@@ -159,7 +159,6 @@ class admin extends CI_Controller{
 						}else{
 							$bonusberechtigt[$i] = $teilnehmer['main'];	
 						}
-						$i++; 
 					}elseif($r1[0]['modus'] == 1){
 						if($teilnehmer['main'] == NULL){
 							$bonusberechtigt[$i] = $teilnehmer['spieler'];	
@@ -167,26 +166,38 @@ class admin extends CI_Controller{
 							$bonusberechtigt[$i] = $teilnehmer['main'];	
 						}
 					}
+					$i++;
 				}
 			}
 
 			$msg = '';
 			// RAID ERÖFFNEN
 			if(isset($_POST['raidoeffnen'])){
-				
-				$this->db->query("UPDATE bonus SET wert = wert-".intval($r1[0]['bonuspunkte'])."
-								  WHERE konto = '".$r1[0]['konto']."' AND
-								  		spieler IN(SELECT
-								   				   		ifnull(s.parent, s.name) AS main
-												   FROM 
-								   						raids_spieler rs
-												   INNER JOIN spieler s ON rs.spieler = s.name 
-												   WHERE raidid = ".intval($raidid)." AND spieler NOT IN(SELECT DISTINCT spieler FROM beute b WHERE raidid = ".intval($raidid)."))");
-				
+				// Punkte zurücksetzen, falls Modus 101er
+				if($r1[0]['modus'] == 0){
+					$this->db->query("UPDATE bonus SET wert = wert-".intval($r1[0]['bonuspunkte'])."
+									  WHERE konto = '".$r1[0]['konto']."' AND
+									  		spieler IN(SELECT
+									   				   		ifnull(s.parent, s.name) AS main
+													   FROM 
+									   						raids_spieler rs
+													   INNER JOIN spieler s ON rs.spieler = s.name 
+													   WHERE raidid = ".intval($raidid)." AND spieler NOT IN(SELECT DISTINCT spieler FROM beute b WHERE raidid = ".intval($raidid)."))");
+				// Punkte zurücksetzen, falls Modus fortlaufend				
+				}elseif($r1[0]['modus'] == 1){
+					$this->db->query("UPDATE bonus SET wert = wert-".intval($r1[0]['bonuspunkte'])."
+									  WHERE konto = '".$r1[0]['konto']."' AND
+									  		spieler IN(SELECT
+									   				   		ifnull(s.parent, s.name) AS main
+													   FROM 
+									   						raids_spieler rs
+													   INNER JOIN spieler s ON rs.spieler = s.name 
+													   WHERE raidid = ".intval($raidid).")");
+				}
+				// Raid wieder aktivieren								   
 				$this->db->where('raidid', $raidid);
 				$this->db->set('active', 1);
 				$this->db->update('raids');
-			
 				// DATEN DES RAIDS ERNEUT AUS DER DB HOLEN			
 				$r1 = $this->admin_model->getRaid(intval($raidid));
 				
@@ -196,18 +207,30 @@ class admin extends CI_Controller{
 
 			// RAID ABSCHLIEßEN
 			if(isset($_POST['raidabschliessen'])){
-					
-					var_dump($bonusberechtigt);
-					
-				$this->db->where('konto', $r1[0]['konto']);
-				$this->db->where_in('spieler', $bonusberechtigt);
-				$this->db->set('wert', 'wert+'.intval($r1[0]['bonuspunkte']), false);
-				$this->db->update('bonus');
+				// Abschluss beim 101er System
+				if($r1[0]['modus'] == 0){
+					$this->db->where('konto', $r1[0]['konto']);
+					$this->db->where_in('spieler', $bonusberechtigt);
+					$this->db->set('wert', 'wert+'.intval($r1[0]['bonuspunkte']), false);
+					$this->db->update('bonus');		
 				
+				// Abschluss bei fortlaufendem System	
+				}elseif($r1[0]['modus'] == 1){
+					if(!empty($bonusberechtigt)){
+						foreach($bonusberechtigt as $spieler){
+							$this->db->where('konto', $r1[0]['konto']);
+							$this->db->where('spieler', $spieler);
+							$this->db->set('wert', 'wert+'.intval($r1[0]['bonuspunkte']).'-(SELECT ifnull(sum(wert), 0) FROM beute WHERE raidid = '.intval($raidid).' AND spieler = "'.$spieler.'")', false);
+							$this->db->update('bonus');
+						}	
+					}
+				}
+				
+				// Raid auf beendet setzen
 				$this->db->where('raidid', intval($raidid));
 				$this->db->set('active', 0);
 				$this->db->update('raids');
-				
+			
 				// DATEN DES RAIDS ERNEUT AUS DER DB HOLEN			
 				$r1 = $this->admin_model->getRaid(intval($raidid));
 				
@@ -304,22 +327,56 @@ class admin extends CI_Controller{
 	
 	public function konten(){
 	     // Session ID vergeben? -> Falls nicht, redirect!
-	    if(!isset($_SESSION['raidid'])){
+	    if(!isset($_SESSION['sessid'])){
 	        redirect('start');
 	    }
+		
+		// Neues Konto speichern
+		if($this->input->post('kontoneusubmit')){
+			$this->load->library('form_validation');	
+			$this->form_validation->set_rules('kontoneuname', 'kontoneuname', 'required|trim');
+			$this->form_validation->set_rules('kontoneukurz', 'kontoneukurz', 'required|trim|max_length[4]');
+			$this->form_validation->set_rules('kontoneumodus', 'kontoneumodus', 'required');
+			$this->form_validation->set_rules('kontoneubonus', 'kontoneubonus', 'required|trim|integer|greater_than[-1]');
+			$this->form_validation->set_rules('kontoneuinit', 'kontoneuinit', 'required|trim|integer|greater_than[-1]');
+			$this->form_validation->set_rules('kontoneuicon', 'kontoneuicon', 'required|trim');
+			
+			if($this->form_validation->run()){
 
+				$this->db->insert('konten', array('name' => $this->input->post('kontoneuname'),
+												  'kurz' => $this->input->post('kontoneukurz'),
+												  'modus' => $this->input->post('kontoneumodus'),
+												  'bonuspunkte' => $this->input->post('kontoneubonus'),
+												  'icon' => $this->input->post('kontoneuicon')));			
+				
+				$this->db->query('INSERT INTO bonus (konto, spieler, wert) SELECT "'.$this->input->post('kontoneukurz').'", name, '.$this->input->post('kontoneuinit').' FROM spieler WHERE parent IS NULL;');
+					
+			}	
+		}
+		
+
+		// Alle Konten abrufen
 		$this->load->model('admin_model');
 		$r = $this->admin_model->getKonten();
-		
 		if(!empty($r)){
 			foreach($r as &$result){
 				$result['modus'] = $this->modus[$result['modus']];
 			}
 		}
 		
+		// Ordner mit den Raidicons
+		$this->load->helper('directory');
+		$map = directory_map('./img/raidicons');
+		foreach($map as $m){
+			$icons[]['icon'] = $m;
+		}
+		
 		$this->load->helper('form');
-		$c = $this->parser->parse('admin_konten', array('neumodus' => form_dropdown('kontoneumodus', $this->modus, '', 'class="form-control"'),
+		$c = $this->parser->parse('admin_konten', array('icons' => $icons,
+														'neumodus' => form_dropdown('kontoneumodus', $this->modus, '', 'class="form-control"'),
 														'konto' => $r), true);
+																													
+														
 																
 		$this->parser->parse('admin_main', array('konten_active' => 'active',
 												 'content' => $c));

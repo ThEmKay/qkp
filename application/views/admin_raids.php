@@ -13,7 +13,7 @@
 				<a href="<?php echo site_url('admin/raids'); ?>/{raidid}"<i class="far fa-2x fa-edit"></i></a>
 			</td>			
 			<td style="width:1%">
-				<img style="width:36px" src="<?php echo base_url(); ?>img/{konto}.png" />
+				<img style="width:36px" src="<?php echo base_url(); ?>img/raidicons/{icon}" />
 			</td>
 			<td style="line-height:31px">
 				{raidid}

@@ -23,8 +23,7 @@
         }
         .card{
           opacity: .8;
-          margin-top: 3px;
-          height: 500px
+          margin-top: 3px
         }
         select{
           margin-bottom: 2px
@@ -38,9 +37,8 @@
           background-size: cover
         } 
         
-        .position1{
-        	
-        	
+        .position1, .position2, .position3{
+       		height: 500px
         }           
         </style>
         <script>
@@ -49,6 +47,7 @@
         var klasse = "druide";
         
         $(function () {
+
               $('[data-toggle="tooltip"]').tooltip();
               
               getData();
@@ -86,13 +85,6 @@
         }
   
         </script>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		  <a class="navbar-brand" href="#">Navbar</a>
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		    <span class="navbar-toggler-icon"></span>
-		  </button>
-		
-		
         <div class="modal fade" id="disclaimer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -115,60 +107,38 @@
               </div>
             </div>
           </div>
-        </div>		
-	
-		
-		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-		    <ul class="navbar-nav mr-auto">
-		      <li class="nav-item active">
-		        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-		      </li>
-		      <li class="nav-item">
-		        <a class="nav-link" href="#">Link</a>
-		      </li>
-		      <li class="nav-item dropdown">
-		        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		          Dropdown
-		        </a>
-		        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-		          <a class="dropdown-item" href="#">Action</a>
-		          <a class="dropdown-item" href="#">Another action</a>
-		          <div class="dropdown-divider"></div>
-		          <a class="dropdown-item" href="#">Something else here</a>
-		        </div>
-		      </li>
-		      <li class="nav-item">
-		        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-		      </li>
-		    </ul>
-		    <form class="form-inline my-2 my-lg-0">
-		      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-		      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-		    </form>
-		  </div>
-		</nav>
-		
-		
-
-        
-        
-        
-        <div class="modal fade" id="lootinfo" tabindex="-1" role="dialog" aria-hidden="true">
+        </div>
+        <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="info-title">Lootinformation</h5>
+                <h5 class="modal-title"><i class="fas fa-lock"></i> Admin Control Panel</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body" id="loot">
-                &nbsp;
+              <form action="<?php echo current_url(); ?>" method="post">
+              <div class="modal-body">
+				<input type="text" name="adminpasswort" placeholder="Admin-Passwort" class="form-control" />
               </div>
+              <div class="modal-footer">
+              	<button type="submit" class="btn btn-primary"><i class="fas fa-unlock-alt"></i> Log In</button>
+              </div>
+              </form>
             </div>
           </div>
         </div> 
-                              
+        
+        
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		  <a class="navbar-brand" href="#">QuickKP</a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+			{admincp}
+		  </div>
+		</nav>                    
         <div class="container-fluid">
           <div>&nbsp;</div>
           <div class="jumbotron">
@@ -183,29 +153,16 @@
               </div>
             </div>
             <div class="col-sm-6 col-md-3">
-              <div class="card">
+              <div class="card position2">
               	<div class="card-body" style="overflow-y:scroll"> 
 				  {position2}
 				</div>
               </div>
             </div>
             <div class="col-sm-6 col-md-6">
-              <div class="card" style="overflow-y:scroll">
+              <div class="card position3" style="overflow-y:scroll">
                 <div class="card-body">
-                  <h5 class="card-title">Bonuspunkte</h5>
-                  <select name="selKonto" class="form-control form-inline" id="selKonto">
-                    {kontofilter}
-                      <option value="{kurz}" {selected}>{name}</option>
-                    {/kontofilter}
-                  </select>
-                  <select name="selKlasse" id="selKlasse" class="form-control form-inline">
-                    {klassenfilter}
-                    <option value="{value}" {selected}>{klasse}</option>
-                    {/klassenfilter}
-                  </select>
-                  <div id="punkte" >
-                    &nbsp;
-                  </div>
+					{position3}
                 </div>
               </div>
             </div>
@@ -228,5 +185,6 @@
             </div>
           </div>         
         </div>
+                
     </body>
 </html>

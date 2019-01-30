@@ -57,7 +57,7 @@
           
         </script>
 		<header>
-        	<h1>Semper Fidelis DKP-Backend</h1>
+        	<h1><i class="fas fa-tools"></i> Semper Fidelis DKP-Admin CP</h1>
         </header>
         <div class="container-fluid">
 			<nav class="navbar navbar-expand-lg navbar-light">
@@ -70,6 +70,7 @@
 			      <a class="nav-item nav-link {raids_active}" href="<?php echo site_url('admin/raids/'); ?>"><i class="fab fa-gripfire"></i> Raids</a>&nbsp;
 			      <a class="nav-item nav-link {konten_active}" href="<?php echo site_url('admin/konten/'); ?>"><i class="fas fa-coins"></i> Konten</a>&nbsp;
 			      <a class="nav-item nav-link {einstellungen_active}" href="<?php echo site_url('admin/einstellungen/'); ?>"><i class="fas fa-cogs"></i> Einstellungen</a>&nbsp;
+			      <a class="nav-item nav-link" href="<?php echo site_url('start/portal/'); ?>"><i class="fas fa-dungeon"></i> Zum Portal</a>&nbsp;
 			    </div>
 			  </div>
 			</nav>        	

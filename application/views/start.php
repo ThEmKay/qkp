@@ -140,7 +140,7 @@
             <?php echo validation_errors('<div class="alert alert-danger" role="alert">', '</div>'); ?>
             <form name="frmStart" action="<?php echo site_url(); ?>" method="POST">
               <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-6 col-md-3">
                   <div class="card">
                     <img class="card-img-top" src="<?php echo base_url(); ?>/img/Circle-of-Light.jpg" alt="Card image cap">
                     <div class="card-body">
@@ -148,12 +148,12 @@
                       <ul class="list-group list-group-flush">
                         <li class="list-group-item" data-toggle="tooltip" data-placement="left" title="Zul'Gurub"><img style="width:35px" src="<?php echo base_url(); ?>/img/zg.png" /> So. 19:30 bis 22:00 Uhr</li>
                         <li class="list-group-item" data-toggle="tooltip" data-placement="left" title="Geschmolzener Kern"><img style="width:35px" src="<?php echo base_url(); ?>/img/mc.png" /> Mo. 19:30 bis 21:15 Uhr</li>
-                        <li class="list-group-item" data-toggle="tooltip" data-placement="left" title="Onyxias Hort"><img style="width:35px" src="<?php echo base_url(); ?>/img/mc.png" /> Mo. 21:25 bis 22:00 Uhr</li>
+                        <li class="list-group-item" data-toggle="tooltip" data-placement="left" title="Onyxias Hort"><img style="width:35px" src="<?php echo base_url(); ?>/img/ony.png" /> Mo. 21:25 bis 22:00 Uhr</li>
                       </ul>
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-6 col-md-3">
                   <div class="card">
                     <img class="card-img-top" src="<?php echo base_url(); ?>/img/card3.jpg" alt="Card image cap">
                     <div class="card-body">
@@ -169,7 +169,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6 col-md-6">
                   <div class="card">
                     <div class="card-body">
                       <h5 class="card-title">Bonuspunkte</h5>
